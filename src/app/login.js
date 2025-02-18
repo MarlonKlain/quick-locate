@@ -3,27 +3,27 @@ import { Text, TextInput, View, Pressable, StyleSheet } from "react-native";
 
 export default function Login() {
     return (
-        <View style={style.container}>
-            <View style={style.welcomeContainer}>
-                <Text style={style.welcomeText}>Welcome</Text>
+        <View style={styles.container}>
+            <View style={styles.welcomeContainer}>
+                <Text style={styles.welcomeText}>Welcome</Text>
             </View>
-            <View style={style.loginContainer}>
-                <View style={style.inputContainer}>    
-                    <Text style={style.textField}>User</Text>
-                    <TextInput style={style.inputField}></TextInput>
-                    <Text style={style.textField}>Password</Text>
-                    <TextInput style={style.inputField}></TextInput>
+            <View style={styles.loginContainer}>
+                <View style={styles.inputContainer}>    
+                    <Text style={styles.textField}>User</Text>
+                    <TextInput style={styles.inputField}></TextInput>
+                    <Text style={styles.textField}>Password</Text>
+                    <TextInput style={styles.inputField}></TextInput>
                 </View>
-                <View style={style.buttonContainer}>
-                    <Pressable style={style.button}>
-                        <Text style={style.buttonText}>Login</Text>
+                <View style={styles.buttonContainer}>
+                    <Pressable style={styles.button}>
+                        <Text style={styles.buttonText}>Login</Text>
                     </Pressable>
                     <View>
                         {/* Create a condition to change the color of the confirm button */}
-                        <Text style={{...style.buttonText, fontSize:20, marginBottom:5}}>Already have an account?</Text>
+                        <Text style={{...styles.buttonText, fontSize:20, marginBottom:5}}>Already have an account?</Text>
                         <Link href={"sign-up"} asChild>
-                            <Pressable style={style.button}>
-                                <Text style={style.buttonText}>Sign Up</Text>
+                            <Pressable style={styles.button}>
+                                <Text style={styles.buttonText}>Sign Up</Text>
                             </Pressable>
                         </Link>
                     </View>
@@ -33,7 +33,7 @@ export default function Login() {
     )
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     container:{
         flex:1
     },

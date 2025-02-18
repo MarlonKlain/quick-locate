@@ -3,17 +3,22 @@ import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 
 export default function Index() {
     return (
-        <View style={style.welcomeContainer}>
-                <Image style={style.quickLocateImg} source={require("../../assets/images/indexImages/quick-locate-index.png")}/>
+        <View style={styles.welcomeContainer}>
+                <Image style={styles.quickLocateImg} source={require("../../assets/images/indexImages/quick-locate-index.png")}/>
                 <View>
                     <Link href={"login"} asChild>
-                        <Pressable style={style.button}>
-                            <Text style={style.buttonText}>Login</Text>
+                        <Pressable style={styles.button}>
+                            <Text style={styles.buttonText}>Login</Text>
                         </Pressable>
                     </Link>
                     <Link href={"sign-up"} asChild>
-                        <Pressable style={style.button}>
-                            <Text style={style.buttonText}>Sign Up</Text>
+                        <Pressable style={styles.button}>
+                            <Text style={styles.buttonText}>Sign Up</Text>
+                        </Pressable>
+                    </Link>
+                    <Link href={"/dashboard"} asChild>
+                        <Pressable style={styles.button}>
+                            <Text style={styles.buttonText}>Dashboard</Text>
                         </Pressable>
                     </Link>
                 </View>
@@ -21,7 +26,7 @@ export default function Index() {
     )
 }
 
-const style = StyleSheet.create({
+const styles = StyleSheet.create({
     welcomeContainer:{
         flex:1,
         alignItems: "center",
