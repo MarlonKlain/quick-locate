@@ -2,6 +2,8 @@ import {fastify} from "fastify";
 import cors from "@fastify/cors"
 import dotenv from "dotenv";
 import { neon } from '@neondatabase/serverless';
+import bcrypt from "bcryptjs"; 
+
 
 dotenv.config()
 const server = fastify()
@@ -17,11 +19,29 @@ server.listen({ port: 3000 }, () => {
 });
 
 server.post('/register', async (request, reply) => {
-    const sql = neon(###);
+    const sql = neon("");
     
     //When destructuring, the name of the variable must match the name of variable at the front end
     const { firstName, lastName, username, email, password} = request.body;
-    
+
+    if(!firstName || !lastName || !username || !email || !password){
+        return reply.status(400).send({ error: "All fields are required" });     
+    }
+
+    if ((firstName || lastName).match(/\d/)){
+        return reply.status(400).send({ error: "First and Last name must not have any number" });
+        
+    }
+    if((password.length < 8)){
+        return reply.status(400).send({ error: "Your password must have above 8 characteres" });
+    }
+
+    if(!password.match(/\d/)){
+        return reply.status(400).send({ error: "Your password must be alphanumeric (Use letters and numbers)" });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     try {
         const [user] = await sql `
         INSERT INTO user_profile (
@@ -36,7 +56,7 @@ server.post('/register', async (request, reply) => {
         ${lastName},
         ${username},
         ${email},
-        ${password}
+        ${hashedPassword}
         )
         `
         return reply.status(201).send({message: "User registraded sucessfull: ", user })
@@ -47,25 +67,28 @@ server.post('/register', async (request, reply) => {
     }
 })
 
-server.get('/login/:username', async (request, reply) => {
-    const sql = neon(###);
+server.post('/login', async (request, reply) => {
+    const sql = neon("");
     
-    // Accessing the 'username' parameter from the route
-    const { username } = request.params; // This is correct, no need for destructuring like above
+    const {username, password} = request.body;
+    
+    if (!username || !password) {
+        return reply.status(400).send({ error: "All fields are required" });
+    }
     
     try {
         const [user] = await sql`
             SELECT * FROM user_profile
             WHERE user_username = ${username}
-        `;
-        
-        if (user) {
+        `
+        const validation = await bcrypt.compare(password, user.user_password); 
+
+        if (user && validation) { 
             return reply.status(200).send({ message: "User found", user });
         } else {
-            return reply.status(404).send({ message: "User not found" });
         }
     } catch (error) {
         console.error(error);
-        return reply.status(500).send({ error: "Database error" });
+        return reply.status(404).send({ message: "User not found" });
     }
 });

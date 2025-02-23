@@ -9,7 +9,7 @@ export default function Login() {
     const [username, setUsername] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [secondPassword, setSecondPassword] = useState();
+    const [passwordConfirm, setpasswordConfirm] = useState();
     
 
     return (
@@ -30,7 +30,7 @@ export default function Login() {
                     </View>
                         {/* Create a condition to change the color of the confirm button */}
                         <Pressable style={{...style.button, backgroundColor:"#35B369"}} onPress={() => {
-                                let user = new User(firstName, lastName, username, email, password)
+                                let user = new User(firstName, lastName, username, email, password, passwordConfirm)
                                 user.signUp()
                                 }}>
                             <Text style={{...style.buttonText, fontSize:20}}>Confirm</Text>
@@ -65,8 +65,8 @@ export default function Login() {
                     <Text style={style.textField}>Confirm Password</Text>
                     <TextInput 
                      style={style.inputField}
-                     value={secondPassword}
-                     onChangeText={setSecondPassword}></TextInput>
+                     value={passwordConfirm}
+                     onChangeText={setpasswordConfirm}></TextInput>
                 </View>
             </View>
         </View>

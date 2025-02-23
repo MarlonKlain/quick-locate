@@ -29,7 +29,7 @@ export default function Login() {
                 </View>
                 <View style={styles.buttonContainer}>
                     <Pressable style={styles.button} onPress={() => {
-                        let user = new User("", "" , username , "" , password);
+                        let user = new User("", "", username , "" , password);
                         user.login();
                         }}>
                         <Text style={styles.buttonText}>Login</Text>
