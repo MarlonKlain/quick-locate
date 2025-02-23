@@ -1,7 +1,12 @@
 import { Link } from "expo-router";
 import { Text, TextInput, View, Pressable, StyleSheet } from "react-native";
+import { useState } from "react";
+import { User } from "../../backEnd/class/auth/user";
 
 export default function Login() {
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
+
     return (
         <View style={styles.container}>
             <View style={styles.welcomeContainer}>
@@ -10,12 +15,23 @@ export default function Login() {
             <View style={styles.loginContainer}>
                 <View style={styles.inputContainer}>    
                     <Text style={styles.textField}>User</Text>
-                    <TextInput style={styles.inputField}></TextInput>
+                    <TextInput 
+                        style={styles.inputField}
+                        value={username}
+                        onChangeText={setUsername}>
+                    </TextInput>
                     <Text style={styles.textField}>Password</Text>
-                    <TextInput style={styles.inputField}></TextInput>
+                    <TextInput 
+                        style={styles.inputField}
+                        value={password}
+                        onChangeText={setPassword}>
+                    </TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <Pressable style={styles.button}>
+                    <Pressable style={styles.button} onPress={() => {
+                        let user = new User("", "" , username , "" , password);
+                        user.login();
+                        }}>
                         <Text style={styles.buttonText}>Login</Text>
                     </Pressable>
                     <View>

@@ -1,7 +1,17 @@
 import { Link } from "expo-router";
+import { useState } from "react";
 import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { User } from "../../backEnd/class/auth/user";
 
 export default function Login() {
+    const [firstName, setFirstName] = useState();
+    const [lastName, setLastName] = useState();
+    const [username, setUsername] = useState();
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+    const [secondPassword, setSecondPassword] = useState();
+    
+
     return (
         <View style={style.container}>
             <View style={style.outsideTextContainer}>
@@ -13,29 +23,50 @@ export default function Login() {
                     <View>
                         <Text style={{...style.buttonText, fontSize:14}}>Already have an account?</Text>
                         <Link href={"login"} asChild>
-                            <Pressable style={{ ...style.button, marginRight: 20 }}>
+                            <Pressable style={{ ...style.button, marginRight: 20 }} >
                                 <Text style={{...style.buttonText, fontSize:20}}>Login</Text>
                             </Pressable>
                         </Link>
                     </View>
                         {/* Create a condition to change the color of the confirm button */}
-                        <Pressable style={{...style.button, backgroundColor:"#35B369"}}>
+                        <Pressable style={{...style.button, backgroundColor:"#35B369"}} onPress={() => {
+                                let user = new User(firstName, lastName, username, email, password)
+                                user.signUp()
+                                }}>
                             <Text style={{...style.buttonText, fontSize:20}}>Confirm</Text>
                         </Pressable>
                 </View>
                 <View style={style.inputContainer}>
                     <Text style={style.textField}>First Name</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                     <TextInput 
+                     style={style.inputField}
+                     value={firstName}
+                     onChangeText={setFirstName}></TextInput>
                     <Text style={style.textField}>Last Name</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                    <TextInput 
+                     style={style.inputField}
+                     value={lastName}
+                     onChangeText={setLastName}></TextInput>
                     <Text style={style.textField}>User</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                    <TextInput 
+                     style={style.inputField}
+                     value={username}
+                     onChangeText={setUsername}></TextInput>
                     <Text style={style.textField}>Email</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                    <TextInput 
+                     style={style.inputField}
+                     value={email}
+                     onChangeText={setEmail}></TextInput>
                     <Text style={style.textField}>Password</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                    <TextInput 
+                     style={style.inputField}
+                     value={password}
+                     onChangeText={setPassword}></TextInput>
                     <Text style={style.textField}>Confirm Password</Text>
-                    <TextInput style={style.inputField}></TextInput>
+                    <TextInput 
+                     style={style.inputField}
+                     value={secondPassword}
+                     onChangeText={setSecondPassword}></TextInput>
                 </View>
             </View>
         </View>
