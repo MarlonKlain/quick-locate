@@ -2,4 +2,10 @@ POST http://localhost:3000/register
 
 ### 
 
+POST http://localhost:3000/import
+
+
+###
 GET http://localhost:3000/login
+
+###

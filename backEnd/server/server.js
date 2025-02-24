@@ -2,12 +2,13 @@ import {fastify} from "fastify";
 import cors from "@fastify/cors"
 import dotenv from "dotenv";
 import { neon } from '@neondatabase/serverless';
-import bcrypt from "bcryptjs"; 
+import bcrypt from "bcryptjs";
+import { ImportProducts } from "../class/importProducts.js";
+
 
 
 dotenv.config()
 const server = fastify()
-
 
 server.register(cors, {
     origin: "*", // Allows all origins
@@ -19,7 +20,7 @@ server.listen({ port: 3000 }, () => {
 });
 
 server.post('/register', async (request, reply) => {
-    const sql = neon("");
+    const sql = neon("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
     
     //When destructuring, the name of the variable must match the name of variable at the front end
     const { firstName, lastName, username, email, password} = request.body;
@@ -68,7 +69,7 @@ server.post('/register', async (request, reply) => {
 })
 
 server.post('/login', async (request, reply) => {
-    const sql = neon("");
+    const sql = neon("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
     
     const {username, password} = request.body;
     
@@ -92,3 +93,36 @@ server.post('/login', async (request, reply) => {
         return reply.status(404).send({ message: "User not found" });
     }
 });
+
+server.post('/import', async (request, reply) => {
+    // Create a validation that will check if the product already exists in the database
+    const sql = neon("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
+    
+    
+    let sheet = new ImportProducts();
+
+    const listProducts = await sheet.storeData()
+    console.log(listProducts);
+    
+    for(const item of listProducts){
+        try {
+            const [products] = await sql `
+            INSERT INTO products (
+            code, 
+            partnumber, 
+            description, 
+            product_location
+            )
+            VALUES (
+            ${item['Código']},
+            ${item['Partnumber']},
+            ${item['Descrição']},
+            ${item['Localização']}
+            )
+            `
+    } catch (error) {
+        console.error(error);
+    }
+}   
+    return reply.status(200).send({ message: "Product not registered", products});
+})

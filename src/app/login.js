@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { Text, TextInput, View, Pressable, StyleSheet } from "react-native";
 import { useState } from "react";
-import { User } from "../../backEnd/class/auth/user";
+import { User } from "../../backEnd/class/user";
 
 export default function Login() {
     const [username, setUsername] = useState();
