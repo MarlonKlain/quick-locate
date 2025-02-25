@@ -1,9 +1,9 @@
 import { readFileSync } from "fs";
 import * as XLSX from "xlsx/xlsx.mjs";
 
-export class ImportProducts {
+export class ImportTtems {
     async storeData(){
-        const buf = readFileSync("products.xlsx");
+        const buf = readFileSync("items.xlsx");
         /* buf is a Buffer */
         const workbook = XLSX.read(buf);
     

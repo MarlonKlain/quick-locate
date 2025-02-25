@@ -3,8 +3,11 @@ import cors from "@fastify/cors"
 import dotenv from "dotenv";
 import { neon } from '@neondatabase/serverless';
 import bcrypt from "bcryptjs";
-import { ImportProducts } from "../class/importProducts.js";
+import { ImportTtems } from "../class/importItems.js";
+import multer from "multer";
 
+//The folder where the uploads will be stored
+const upload = multer({dest: 'uploads/'})
 
 
 dotenv.config()
@@ -99,19 +102,19 @@ server.post('/import', async (request, reply) => {
     const sql = neon("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
     
     
-    let sheet = new ImportProducts();
+    let sheet = new ImportTtems();
 
-    const listProducts = await sheet.storeData()
-    console.log(listProducts);
+    const listItems = await sheet.storeData()
+    console.log(listItems);
     
-    for(const item of listProducts){
+    for(const item of listItems){
         try {
-            const [products] = await sql `
-            INSERT INTO products (
+            const [items] = await sql `
+            INSERT INTO item (
             code, 
             partnumber, 
             description, 
-            product_location
+            item_location
             )
             VALUES (
             ${item['Código']},
@@ -124,5 +127,18 @@ server.post('/import', async (request, reply) => {
         console.error(error);
     }
 }   
-    return reply.status(200).send({ message: "Product not registered", products});
+    return reply.status(200).send({ message: "Product not registered", items});
 })
+
+server.get('/items', async (request, reply) => {
+    const sql = neon("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
+    try {
+        const items = await sql`
+        SELECT * FROM item
+        `
+        return reply.status(200).send({messsage: "All products returned", items})
+    } catch (error) {
+        
+    }
+})
+

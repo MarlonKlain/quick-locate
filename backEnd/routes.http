@@ -6,6 +6,6 @@ POST http://localhost:3000/import
 
 
 ###
-GET http://localhost:3000/login
+GET http://localhost:3000/items
 
 ###

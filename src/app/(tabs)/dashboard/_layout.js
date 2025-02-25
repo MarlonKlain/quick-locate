@@ -6,7 +6,7 @@ export default function Layout() {
         <Tabs>
             <Tabs.Screen name="index" options={{
                 headerShown:false,
-                title: "Products",
+                title: "Items",
                 tabBarActiveTintColor: "#2295BB",
                 tabBarIcon: ({focused, color, size}) => {
                     if(focused){
