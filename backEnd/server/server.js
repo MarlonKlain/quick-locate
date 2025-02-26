@@ -1,3 +1,4 @@
+"use server"
 import {fastify} from "fastify";
 import cors from "@fastify/cors"
 import dotenv from "dotenv";
@@ -18,12 +19,14 @@ server.register(cors, {
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 });
 
-server.listen({ port: 3000 }, () => {
+server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
+    
     console.log("Server running on http://localhost:3000");
 });
 
+
 server.post('/register', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
     
     //When destructuring, the name of the variable must match the name of variable at the front end
     const { firstName, lastName, username, email, password} = request.body;
@@ -72,7 +75,7 @@ server.post('/register', async (request, reply) => {
 })
 
 server.post('/login', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
     
     const {username, password} = request.body;
     
@@ -99,7 +102,7 @@ server.post('/login', async (request, reply) => {
 
 server.post('/import', async (request, reply) => {
     // Create a validation that will check if the product already exists in the database
-    const sql = neon();
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
     
     
     let sheet = new ImportTtems();
@@ -131,7 +134,7 @@ server.post('/import', async (request, reply) => {
 })
 
 server.get('/items', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.NEXT_PUBLIC_DATABASE_URL);
     try {
         const items = await sql`
         SELECT * FROM item
