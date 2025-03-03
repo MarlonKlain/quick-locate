@@ -1,7 +1,7 @@
 export class Locations {
     async getAllLocations(){
         try {
-            const response = await fetch("http://localhost:3000/locations", {
+            const response = await fetch("https://quick-locate.onrender.com/locations", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

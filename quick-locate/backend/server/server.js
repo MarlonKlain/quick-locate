@@ -25,7 +25,7 @@ server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
 
 
 server.post('/register', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.DATABASE_URL);
     
     //When destructuring, the name of the variable must match the name of variable at the front end
     const { firstName, lastName, username, email, password} = request.body;
@@ -74,7 +74,7 @@ server.post('/register', async (request, reply) => {
 })
 
 server.post('/login', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.DATABASE_URL);
     
     const {username, password} = request.body;
     
@@ -101,7 +101,7 @@ server.post('/login', async (request, reply) => {
 
 server.post('/import', async (request, reply) => {
     // Create a validation that will check if the product already exists in the database
-    const sql = neon();
+    const sql = neon(process.env.DATABASE_URL);
     
     
     let sheet = new ImportTtems();
@@ -133,7 +133,7 @@ server.post('/import', async (request, reply) => {
 })
 
 server.get('/items', async (request, reply) => {
-    const sql = neon();
+    const sql = neon(process.env.DATABASE_URL);
     try {
         const items = await sql`SELECT * FROM items`
         return reply.status(200).send({messsage: "All products returned", items})
@@ -143,7 +143,7 @@ server.get('/items', async (request, reply) => {
 })
 
 server.get('/locations', async (request, reply) => {
-    const sql = neon ("postgresql://neondb_owner:npg_rCl4Iz3iWLaN@ep-jolly-truth-a82hil10-pooler.eastus2.azure.neon.tech/neondb?sslmode=require");
+    const sql = neon (process.env.DATABASE_URL);
     try {
         const locations = await sql `SELECT * FROM locations`
         return reply.status(200).send({messsage: "All locations returned", locations})
