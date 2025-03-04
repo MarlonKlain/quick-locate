@@ -1,13 +1,24 @@
-import { View, TextInput, Pressable, StyleSheet, Text, FlatList, Modal} from "react-native";
+import { View, TextInput, Pressable, StyleSheet, Text, FlatList, Modal, Alert} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Locations } from "../../../../backend/class/locations"
+
+
 
 export default function Items() {
     const [locations, setLocations] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false)
     const [newLocation, setNewLocation] = useState()
     const APIlocations = new Locations();
+
+    function deleteLocation (location) {
+        Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
+          { text: 'Cancelar', style: 'cancel'},
+          { text: '', style: 'cancel' },
+          { text: 'DELETAR', onPress: async () => await APIlocations.deleteLocationDatabase(location), style: 'destructive' },
+        ]);
+      };
+    
 
     useEffect(() => {
         APIlocations.getAllLocations().then(async (response) => {
@@ -62,9 +73,11 @@ export default function Items() {
                 <FlatList
                     data={locations}
                     renderItem={({ item }) => (
-                        <View style={styles.card}>
-                            <Text style={styles.cardText}>{item.item_location}</Text>
-                        </View>
+                        <Pressable onLongPress={() => deleteLocation(item.item_location)}>
+                            <View style={styles.card}>
+                                <Text style={styles.cardText}>{item.item_location}</Text>
+                            </View>
+                        </Pressable>
                     )}
                     keyExtractor={(item) => item.id_location.toString()}
                     numColumns={2}
@@ -149,9 +162,10 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     card: {
-        flex: 1,
+        width:170,
         backgroundColor: "white",
-        margin: 8,
+        marginHorizontal:10,
+        marginVertical:5,
         padding: 20,
         borderRadius: 12,
         alignItems: "center",
@@ -160,7 +174,6 @@ const styles = StyleSheet.create({
         shadowColor: "black",
         shadowOpacity: 0.1,
         shadowOffset: { width: 0, height: 2 },
-        marginHorizontal:20
     },
     cardText: {
         fontSize: 18,

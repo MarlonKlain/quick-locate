@@ -154,7 +154,7 @@ server.get('/locations', async (request, reply) => {
     }
 })
 
-server.post('/locations', async (request, reply) => {
+server.post('/register-new-location', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const {item_location} = request.body;
 
@@ -165,5 +165,20 @@ server.post('/locations', async (request, reply) => {
         return reply.status(200).send({message: "New locations registered!", location})
     } catch (error) {
         return reply.status(400).send({message: "Something went wrong on registering new location!", error: error.message})  
+    } 
+})
+
+server.post('/delete-location', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL);
+    const {item_location} = request.body;
+
+    try {
+        const [location] = await sql`
+        DELETE FROM locations 
+        WHERE item_location=${item_location}
+        `
+        return reply.status(200).send({message: "Location deleted", location})
+    } catch (error) {
+        return reply.status(400).send({message: "Something went wrong on deleting new location!", error: error.message})  
     } 
 })

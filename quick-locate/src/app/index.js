@@ -1,3 +1,4 @@
+import 'expo-dev-client';
 import { Link } from "expo-router";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 

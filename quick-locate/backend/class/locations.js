@@ -21,7 +21,7 @@ export class Locations {
             item_location: location
         }
         try {
-            const response = await fetch("https://quick-locate.onrender.com/locations", {
+            const response = await fetch("https://quick-locate.onrender.com/register-new-location", {
                 method:"POST",
                 headers: {
                     "Content-Type" : "application/json"
@@ -36,4 +36,24 @@ export class Locations {
             console.error(error);
         }
     }
+
+    // async deleteLocationDatabase(location) {
+    //     const data = {
+    //         item_location: location
+    //     }
+
+    //     try {
+    //         const response = await fetch ("https://quick-locate.onrender.com/delete-location", {
+    //             method:"POST",
+    //             headers:{
+    //                 "Content-Type" : "application/json"
+    //             },
+    //             body:JSON.stringify(data)
+    //         })
+    //         const result = response.json()
+    //         return result
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
 }
