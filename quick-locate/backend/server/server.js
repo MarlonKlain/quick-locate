@@ -164,6 +164,6 @@ server.post('/locations', async (request, reply) => {
         `
         return reply.status(200).send({message: "New locations registered!", location})
     } catch (error) {
-        return reply.status(400).send({message: "Something went wrong on registering new location!", error: message.error})  
+        return reply.status(400).send({message: "Something went wrong on registering new location!", error: error.message})  
     } 
 })
