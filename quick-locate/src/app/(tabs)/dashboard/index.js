@@ -29,14 +29,14 @@ export default function Items() {
     }
 
     useEffect(() => {
-        // item.listItems()
-        //     .then(async (response) => {
-        //         setItemsList(await localDatabase.getAllLocalData())
-        //     });
+        item.listItems()
+            .then(async (response) => {
+                setItemsList(await localDatabase.getAllLocalData())
+            });
     }, []);    
 
     useEffect(() =>{
-        // listSearch(search, filter)
+        listSearch(search, filter)
     },[search])
 
     return (
@@ -117,6 +117,10 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         borderWidth: 1,
         borderColor: "#2295BB",
+        elevation: 3,
+        shadowColor: "black",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },  
     },
     dropdownButton: {
         width: 50,

@@ -56,7 +56,11 @@ const data = [
         width:120,
         borderRadius: 10,
         paddingHorizontal: 8,
-        marginHorizontal:20
+        marginHorizontal:20,
+        elevation: 3,
+        shadowColor: "black",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
     },
     icon: {
         marginRight: 5,
@@ -90,4 +94,5 @@ const data = [
         height: 40,
         fontSize: 12,
     },
+    
   });

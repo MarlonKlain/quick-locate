@@ -146,8 +146,24 @@ server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
         const locations = await sql `SELECT * FROM locations`
+        console.log(locations);
+        
         return reply.status(200).send({messsage: "All locations returned", locations})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the locations", error: error.message});
     }
+})
+
+server.post('/locations', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL);
+    const {item_location} = request.body;
+
+    try {
+        const [location] = await sql`
+        INSERTO INTO location(item_location) VALUES (${item_location})
+        `
+        return reply.status(200).send({message: "New locations registered!", location})
+    } catch (error) {
+        return reply.status(400).send({message: "Something went wrong on registering new location!", error: message.error})  
+    } 
 })
