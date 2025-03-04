@@ -160,7 +160,7 @@ server.post('/locations', async (request, reply) => {
 
     try {
         const [location] = await sql`
-        INSERTO INTO location(item_location) VALUES (${item_location})
+        INSERT INTO location(item_location) VALUES (${item_location})
         `
         return reply.status(200).send({message: "New locations registered!", location})
     } catch (error) {
