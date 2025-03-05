@@ -37,23 +37,24 @@ export class Locations {
         }
     }
 
-    // async deleteLocationDatabase(location) {
-    //     const data = {
-    //         item_location: location
-    //     }
+    async deleteLocationDatabase(location) {
+        const data = {
+            item_location: location
+        }
 
-    //     try {
-    //         const response = await fetch ("https://quick-locate.onrender.com/delete-location", {
-    //             method:"POST",
-    //             headers:{
-    //                 "Content-Type" : "application/json"
-    //             },
-    //             body:JSON.stringify(data)
-    //         })
-    //         const result = response.json()
-    //         return result
-    //     } catch (error) {
-    //         console.error(error);
-    //     }
-    // }
+        try {
+            const response = await fetch ("https://quick-locate.onrender.com/delete-location", {
+                method:"POST",
+                headers:{
+                    "Content-Type" : "application/json"
+                },
+                body:JSON.stringify(data)
+            })
+            const result = response.json()
+            
+            return result
+        } catch (error) {
+            console.error(error);
+        }
+    }
 }

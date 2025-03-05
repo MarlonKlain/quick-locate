@@ -17,7 +17,7 @@ export default function Index() {
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </Pressable>
                     </Link>
-                    <Link href={"/dashboard"} asChild>
+                    <Link href={"/(tabs)"} asChild>
                         <Pressable style={styles.button}>
                             <Text style={styles.buttonText}>Dashboard</Text>
                         </Pressable>

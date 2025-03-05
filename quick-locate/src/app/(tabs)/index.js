@@ -1,9 +1,10 @@
-import { View, TextInput, Pressable, StyleSheet, FlatList, Text } from "react-native";
+import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Item } from "../../../../backend/class/item"
-import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
-import DropdownComponent from "../../../components/dropdown";
+import { Item } from "../../../backend/class/item"
+import { useLocalDatabase } from '../../../backend/database/local-database-CRUD'
+import DropdownComponent from "../../components/dropdown"
+import { Link, router } from "expo-router";
 
 export default function Items() {
     const [itemsList, setItemsList] = useState([]);
@@ -13,6 +14,7 @@ export default function Items() {
     const localDatabase = useLocalDatabase();
     let item = new Item();
     
+
     async function listSearch(name, column) {
         try {
             const response = await localDatabase.filter(name, column)
@@ -85,12 +87,14 @@ export default function Items() {
                 <FlatList
                     data={itemsList}
                     renderItem={({ item }) => (
-                        <View style={styles.row}>
-                            <Text style={styles.cell}>{item.code}</Text>
-                            <Text style={styles.cell}>{item.partnumber}</Text>
-                            <Text style={styles.cell}>{item.description}</Text>
-                            <Text style={styles.cell}>{item.item_location}</Text>
-                        </View>
+                            <Pressable onLongPress={()=> router.push('./items')}>
+                                <View style={styles.row}>
+                                    <Text style={styles.cell}>{item.code}</Text>
+                                    <Text style={styles.cell}>{item.partnumber}</Text>
+                                    <Text style={styles.cell}>{item.description}</Text>
+                                    <Text style={styles.cell}>{item.item_location}</Text>
+                                </View>
+                            </Pressable>
                     )}
                     keyExtractor={(item) => item.code}
                 />

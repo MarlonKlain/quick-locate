@@ -1,7 +1,7 @@
 import { View, TextInput, Pressable, StyleSheet, Text, FlatList, Modal, Alert} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Locations } from "../../../../backend/class/locations"
+import { Locations } from "../../../backend/class/locations"
 
 
 
@@ -22,7 +22,7 @@ export default function Items() {
 
     useEffect(() => {
         APIlocations.getAllLocations().then(async (response) => {
-            setLocations(response.locations);
+            setLocations(response.locations);  
         });
     }, []);
 
@@ -30,7 +30,7 @@ export default function Items() {
         APIlocations.getAllLocations().then(async (response) => {
             setLocations(response.locations);
         });
-    }, [isModalVisible])
+    }, [isModalVisible, locations])
 
     return (
         <View style={styles.container}>
