@@ -41,6 +41,28 @@ export function useLocalDatabase(){
           console.log("filter: ", error)
         }
     }
-    return {storeDataLocally, getAllLocalData, filter, getAllLocalData}
+
+    async function getItemInformationByCode(code) {
+        try {
+            const query = `SELECT * FROM items where code = ?`
+            const response = await database.getAllAsync(query, `${code}`)
+            return response
+        } catch (error) {
+            console.log("Item by code ", error)
+        }
+    }
+
+    async function modifyLocation(code, newLocation) {
+        try {
+            const query = `UPDATE items
+            SET item_location = ?
+            WHERE code = ?`
+            const response = await database.runAsync(query, `${newLocation}`, `${code}`)
+            return response
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation}
 }
 

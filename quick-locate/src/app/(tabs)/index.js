@@ -87,7 +87,7 @@ export default function Items() {
                 <FlatList
                     data={itemsList}
                     renderItem={({ item }) => (
-                            <Pressable onLongPress={()=> router.push('./items')}>
+                            <Pressable onLongPress={()=> router.push(`./items/${item.code}`)}>
                                 <View style={styles.row}>
                                     <Text style={styles.cell}>{item.code}</Text>
                                     <Text style={styles.cell}>{item.partnumber}</Text>
@@ -177,6 +177,7 @@ const styles = StyleSheet.create({
     cell: {
         flex: 1,
         textAlign: "center",
+        fontFamily: 'Roboto-Regular'
     },
     filters:{
         flex:0.05,
