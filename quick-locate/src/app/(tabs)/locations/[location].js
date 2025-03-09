@@ -14,15 +14,17 @@ export default function ScreenItemsByLocation(){
     localDatabase.getAllItemsByLocation(location)
     .then((response) => {
       setItemsByLocation(response)
+      console.log(response);
+      
     })
-  }, [])
+  }, [location])
 
-  // if (itemsByLocation) {
-  //   console.log("Loaded: ", itemsByLocation)
+  if (itemsByLocation) {
+    console.log("Loaded: ", itemsByLocation)
 
-  // } else {
-  //   console.log("Not Loaded!: ", itemsByLocation)
-  // }
+  } else {
+    console.log("Not Loaded!: ", itemsByLocation)
+  }
 
   return(
     <View style={styles.container}>

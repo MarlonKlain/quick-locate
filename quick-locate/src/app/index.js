@@ -7,19 +7,14 @@ export default function Index() {
         <View style={styles.welcomeContainer}>
                 <Image style={styles.quickLocateImg} source={require("../../assets/images/quick-locate-index.png")}/>
                 <View>
-                    <Link href={"login"} asChild>
+                    <Link href={"(auth)/login"} asChild>
                         <Pressable style={styles.button}>
                             <Text style={styles.buttonText}>Login</Text>
                         </Pressable>
                     </Link>
-                    <Link href={"sign-up"} asChild>
+                    <Link href={"(auth)/sign-up"} asChild>
                         <Pressable style={styles.button}>
                             <Text style={styles.buttonText}>Sign Up</Text>
-                        </Pressable>
-                    </Link>
-                    <Link href={"/(tabs)"} asChild>
-                        <Pressable style={styles.button}>
-                            <Text style={styles.buttonText}>Dashboard</Text>
                         </Pressable>
                     </Link>
                 </View>

@@ -3,7 +3,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from "react";
 import { Stack } from "expo-router"
 import { SQLiteProvider } from "expo-sqlite";
-import { createLocalDatabase} from '../../backend/database/local-database-CRUD.js'
+import { createLocalDatabase } from '../../backend/database/create-database'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -28,9 +28,9 @@ export default function Layout() {
       <SQLiteProvider databaseName="items-local-database.db" onInit={createLocalDatabase}>
         <Stack>
             <Stack.Screen name="index" options={{headerShown:false}} />
-            <Stack.Screen name="login" options={{headerShown:false}} />
-            <Stack.Screen name="sign-up" options={{headerShown:false}} />
             <Stack.Screen name="(tabs)" options={{headerShown:false}} />
+            <Stack.Screen name="(auth)/login" options={{headerShown:false}} />
+            <Stack.Screen name="(auth)/sign-up" options={{headerShown:false}} />
         </Stack>
       </SQLiteProvider>
     )

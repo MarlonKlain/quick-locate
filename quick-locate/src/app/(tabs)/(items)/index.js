@@ -32,7 +32,7 @@ export default function Items() {
 
     async function checksLocalDatabase() {
         const response = await localDatabase.getAllLocalData()        
-        if (!response){
+        if (response[0] == undefined){
             item.listItems()
                 .then(async (response) => {
                     localDatabase.storeDataLocally(response)                    

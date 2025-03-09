@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+
 export class User {
     #username;
     #email;
@@ -60,7 +62,7 @@ export class User {
             });
             const result = await response.json();
             console.log("Response from server:", result);
-
+            return result
         } catch (error) {
             console.log(error)
         }
