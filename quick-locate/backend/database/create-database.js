@@ -5,7 +5,7 @@ export async function createLocalDatabase(){
     // The table menuItens will be create if not exists with the colums: id, itemName, description, price, category, image
     await db.execAsync(`
         CREATE TABLE IF NOT EXISTS items(
-            id_item SERIAL PRIMARY KEY, 
+            id_item PRIMARY KEY AUTOINCREMENT, 
             code TEXT NOT NULL UNIQUE, 
             partnumber TEXT NOT NULL, 
             description TEXT NOT NULL, 

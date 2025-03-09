@@ -1,9 +1,9 @@
 import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Item } from "../../../backend/class/item"
-import { useLocalDatabase } from '../../../backend/database/local-database-CRUD'
-import DropdownComponent from "../../components/dropdown"
+import { Item } from "../../../../backend/class/item"
+import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
+import DropdownComponent from "../../../components/dropdown"
 import { Link, router } from "expo-router";
 
 export default function Items() {
@@ -30,11 +30,24 @@ export default function Items() {
         }
     }
 
+    async function checksLocalDatabase() {
+        const response = await localDatabase.getAllLocalData()        
+        if (!response){
+            item.listItems()
+                .then(async (response) => {
+                    localDatabase.storeDataLocally(response)                    
+                    setItemsList(await localDatabase.getAllLocalData())
+                });
+                console.log("False");
+            return false
+        } else {
+            setItemsList(response)
+            return true
+        }
+    }
+    
     useEffect(() => {
-        item.listItems()
-            .then(async (response) => {
-                setItemsList(await localDatabase.getAllLocalData())
-            });
+       checksLocalDatabase();
     }, []);    
 
     useEffect(() =>{
@@ -87,7 +100,7 @@ export default function Items() {
                 <FlatList
                     data={itemsList}
                     renderItem={({ item }) => (
-                            <Pressable onLongPress={()=> router.push(`./items/${item.code}`)}>
+                            <Pressable onLongPress={()=> router.push(`./${item.code}`)}>
                                 <View style={styles.row}>
                                     <Text style={styles.cell}>{item.code}</Text>
                                     <Text style={styles.cell}>{item.partnumber}</Text>
@@ -173,6 +186,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#ccc",
         paddingVertical: 10,
+        alignItems:"center"
     },
     cell: {
         flex: 1,

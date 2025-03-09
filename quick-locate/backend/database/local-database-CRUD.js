@@ -4,7 +4,7 @@ export function useLocalDatabase(){
     const database = useSQLiteContext();
     async function storeDataLocally(rows) {
         const query = `
-        INSERT INTO items (
+        INSERT OR IGNORE INTO items (
         code, 
         partnumber, 
         description, 
@@ -16,6 +16,7 @@ export function useLocalDatabase(){
         for (const item of rows.items) {      
             try {
                 const localResult = await database.runAsync(query, [item.code, item.partnumber, item.description, item.item_location, item.date_lastrecord])
+                return localResult
             } catch (error) {
                 console.error(error);
             }
@@ -58,11 +59,22 @@ export function useLocalDatabase(){
             SET item_location = ?
             WHERE code = ?`
             const response = await database.runAsync(query, `${newLocation}`, `${code}`)
+            console.log("Endereço alterado com sucesso!");
             return response
         } catch (error) {
             console.log(error);
         }
     }
-    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation}
+
+    async function getAllItemsByLocation(location) {
+        try {
+            const query = `SELECT code, partnumber, description, item_location FROM items where item_location LIKE ?`
+            const response = await database.getAllAsync(query, `${location}% `)
+            return response
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation}
 }
 

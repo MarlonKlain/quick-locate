@@ -1,15 +1,15 @@
 import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
-import { useLocalDatabase } from '../../../backend/database/local-database-CRUD';
+import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
 
 export default function itemDetails() {
-  const { item } = useLocalSearchParams();
   const [code, setCode] = useState();
   const [partnumber, setPartnumber] = useState();
   const [description, setDescription] = useState();
   const [location, setLocation] = useState();
   const itemInformationFromDatabase = useLocalDatabase();
+  const { item } = useLocalSearchParams();
   
   useEffect (() => {
     itemInformationFromDatabase.getItemInformationByCode(item)

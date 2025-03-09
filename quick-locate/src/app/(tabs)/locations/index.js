@@ -1,7 +1,10 @@
 import { View, TextInput, Pressable, StyleSheet, Text, FlatList, Modal, Alert} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
-import { Locations } from "../../../backend/class/locations"
+import { Locations } from "../../../../backend/class/locations"
+import { router } from "expo-router";
+import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
+import { Item } from "../../../../backend/class/item";
 
 
 
@@ -10,6 +13,7 @@ export default function Items() {
     const [isModalVisible, setModalVisible] = useState(false)
     const [newLocation, setNewLocation] = useState()
     const APIlocations = new Locations();
+    const localDatabase = useLocalDatabase()
 
     function deleteLocation (location) {
         Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
@@ -19,6 +23,18 @@ export default function Items() {
         ]);
       };
     
+
+    //   async function checksLocalDatabase() {
+    //     const response = await localDatabase.getAllItemsByLocation()
+    //     if (!response){
+    //         APIlocations.getAllLocations()
+    //         .then((response) => )
+    //         return false
+    //     } else {
+    //         setItemsList(response)
+    //         return true
+    //     }
+    // }
 
     useEffect(() => {
         APIlocations.getAllLocations().then(async (response) => {
@@ -57,7 +73,7 @@ export default function Items() {
                     <TextInput style={styles.modalTextInput}
                     onChangeText={setNewLocation}></TextInput>
                     <View style={{flexDirection:"row"}}>
-                        <Pressable style={{...styles.modalButtons, marginRight:15}} onPress={async () => await APIlocations.registerNewLocation(newLocation)}>
+                        <Pressable style={{...styles.modalButtons, marginRight:15}} onPress={async () => {await APIlocations.registerNewLocation(newLocation); setModalVisible(false)}}>
                             <Text>Confirm</Text>
                         </Pressable>
                         <Pressable style={styles.modalButtons} onPress={() => setModalVisible(false)}>
@@ -73,7 +89,7 @@ export default function Items() {
                 <FlatList
                     data={locations}
                     renderItem={({ item }) => (
-                        <Pressable onLongPress={() => deleteLocation(item.item_location)}>
+                        <Pressable onLongPress={() => deleteLocation(item.item_location)} onPress={() => router.push(`./locations/${item.item_location}`)}>
                             <View style={styles.card}>
                                 <Text style={styles.cardText}>{item.item_location}</Text>
                             </View>

@@ -5,7 +5,7 @@ import { Feather, MaterialIcons, FontAwesome6 } from "@expo/vector-icons"
 export default function Layout() {
     return (
                 <Tabs>
-                    <Tabs.Screen name="index" options={{
+                    <Tabs.Screen name="(items)" options={{
                         headerShown:false,
                         title: "Items",
                         tabBarActiveTintColor: "#2295BB",
@@ -15,7 +15,7 @@ export default function Layout() {
                             }
                                 return <Feather name="box" color={color} size={size} />
                         }}} />
-                    <Tabs.Screen name="location" options={{
+                    <Tabs.Screen name="locations" options={{
                         headerShown:false, 
                         title: "Locations",
                         tabBarActiveTintColor: "#2295BB",
