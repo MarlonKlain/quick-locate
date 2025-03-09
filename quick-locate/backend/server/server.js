@@ -95,7 +95,7 @@ server.post('/login', async (request, reply) => {
         }
     } catch (error) {
         console.error(error);
-        return reply.status(404).send({ message: "User not found" });
+        return reply.status(404).send({ message: "User not found"});
     }
 });
 

@@ -28,9 +28,9 @@ export default function Layout() {
       <SQLiteProvider databaseName="items-local-database.db" onInit={createLocalDatabase}>
         <Stack>
             <Stack.Screen name="index" options={{headerShown:false}} />
-            <Stack.Screen name="login" options={{headerShown:false}} />
-            <Stack.Screen name="sign-up" options={{headerShown:false}} />
             <Stack.Screen name="(tabs)" options={{headerShown:false}} />
+            <Stack.Screen name="(auth)/login" options={{headerShown:false}} />
+            <Stack.Screen name="(auth)/sign-up" options={{headerShown:false}} />
         </Stack>
       </SQLiteProvider>
     )

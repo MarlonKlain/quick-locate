@@ -1,11 +1,12 @@
-import { Link } from "expo-router";
-import { Text, TextInput, View, Pressable, StyleSheet } from "react-native";
+import { Link, router } from "expo-router";
+import { Text, TextInput, View, Pressable, StyleSheet, Alert } from "react-native";
 import { useState } from "react";
-import { User } from "../../backend/class/user";
+import { User } from "../../../backend/class/user";
 
 export default function Login() {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
+    const [isLoggedIn, setIsLoggedIn] = useState();
 
     return (
         <View style={styles.container}>
@@ -30,7 +31,15 @@ export default function Login() {
                 <View style={styles.buttonContainer}>
                     <Pressable style={styles.button} onPress={() => {
                         let user = new User("", "", username , "" , password);
-                        user.login();
+                        user.login()
+                        .then((response) => {
+                            if(response.message != "User found"){
+                                Alert.alert(response.message)
+                            } else {
+                                router.dismissAll()
+                                router.replace("/(tabs)")
+                            }
+                        })
                         }}>
                         <Text style={styles.buttonText}>Login</Text>
                     </Pressable>
