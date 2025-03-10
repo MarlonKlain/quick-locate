@@ -16,7 +16,6 @@ export function useLocalDatabase(){
         for (const item of rows.items) {      
             try {
                 const localResult = await database.runAsync(query, item.code, item.partnumber, item.description, item.item_location, item.date_lastrecord)
-                // console.log("Stored: ", localResult);
                 return localResult
             } catch (error) {
                 console.error(error);
@@ -28,8 +27,6 @@ export function useLocalDatabase(){
         try {
             const query = "SELECT * FROM items"
             const response = await database.getAllAsync(query)
-            console.log("Items List: ", response);
-            
             return response
         } catch (error) {
             console.log("getAllLocalData: ", error)
@@ -78,6 +75,20 @@ export function useLocalDatabase(){
             console.error(error);
         }
     }
-    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation}
+
+    async function  listOfLocations() {
+        try {
+            const query = `
+            SELECT DISTINCT SUBSTR(item_location, 1, 1) AS first_caracter
+            FROM items
+            ORDER BY first_caracter
+            `
+            const response = await database.getAllAsync(query)
+            return response
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation, listOfLocations}
 }
 

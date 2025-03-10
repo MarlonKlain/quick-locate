@@ -1,13 +1,10 @@
 import { Tabs } from "expo-router";
 import { Feather, MaterialIcons, FontAwesome6 } from "@expo/vector-icons"
-import { SQLiteProvider } from "expo-sqlite";
-import { createLocalDatabase } from "../../../backend/database/create-database"; 
 
 
 
 export default function Layout() {
     return (
-              <SQLiteProvider databaseName="items-local-database.db" onInit={createLocalDatabase}>
                 <Tabs>
                     <Tabs.Screen name="(items)" options={{
                         headerShown:false,
@@ -40,6 +37,5 @@ export default function Layout() {
                                 return <FontAwesome6 name="file-import" color={color} size={size} />
                         }}} />
                 </Tabs>
-            </SQLiteProvider>
     )
 }

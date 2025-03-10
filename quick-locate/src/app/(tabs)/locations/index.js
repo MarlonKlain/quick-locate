@@ -9,7 +9,7 @@ import { Item } from "../../../../backend/class/item";
 
 
 export default function Items() {
-    const [locations, setLocations] = useState([]);
+    const [locations, setLocations] = useState();
     const [isModalVisible, setModalVisible] = useState(false)
     const [newLocation, setNewLocation] = useState()
     const APIlocations = new Locations();
@@ -36,28 +36,26 @@ export default function Items() {
     //     }
     // }
 
-    useEffect(() => {
-        APIlocations.getAllLocations().then(async (response) => {
-            setLocations(response.locations);  
-        });
-    }, []);
-
     useEffect(()=>{
-        APIlocations.getAllLocations().then(async (response) => {
-            setLocations(response.locations);
-        });
-    }, [isModalVisible, locations])
+        // APIlocations.getAllLocations().then(async (response) => {
+        //     setLocations(response.locations);
+        // });
+        localDatabase.listOfLocations()
+        .then(async (response) => {
+            setLocations(response)
+        })
+    }, [isModalVisible])
 
     return (
         <View style={styles.container}>
-            <View style={styles.searchBarContainer}>
+            {/* <View style={styles.searchBarContainer}>
                 <View style={styles.searchBar}>
                     <TextInput style={styles.searchInput} placeholder="Search..." placeholderTextColor="#555" />
                     <View style={styles.searchIconContainer}>
                         <Feather name="search" size={24} color="#2295BB" />
                     </View>
                 </View>
-            </View>
+            </View> */}
             <View style={styles.addLocationContainer}>
                 <Pressable style={styles.AddLocationButton} onPress={() => setModalVisible(true)}>
                     <Text style={styles.addButtonText}>Add location</Text>
@@ -89,13 +87,13 @@ export default function Items() {
                 <FlatList
                     data={locations}
                     renderItem={({ item }) => (
-                        <Pressable onLongPress={() => deleteLocation(item.item_location)} onPress={() => router.push(`./locations/${item.item_location}`)}>
+                        <Pressable onLongPress={() => deleteLocation(item.first_caracter)} onPress={() => router.push(`./locations/${item.first_caracter}`)}>
                             <View style={styles.card}>
-                                <Text style={styles.cardText}>{item.item_location}</Text>
+                                <Text style={styles.cardText}>{item.first_caracter}</Text>
                             </View>
                         </Pressable>
                     )}
-                    keyExtractor={(item) => item.id_location.toString()}
+                    keyExtractor={(item) => item.first_caracter}
                     numColumns={2}
                     columnWrapperStyle={styles.row}
                 />
