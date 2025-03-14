@@ -99,7 +99,7 @@ server.post('/login', async (request, reply) => {
     }
 });
 
-server.post('/import', async (request, reply) => {
+server.get('/import', async (request, reply) => {
     // Create a validation that will check if the product already exists in the database
     const sql = neon(process.env.DATABASE_URL);
     
@@ -135,7 +135,7 @@ server.post('/import', async (request, reply) => {
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
-        const items = await sql`SELECT * FROM item`
+        const item = await sql`SELECT * FROM item`
         return reply.status(200).send({messsage: "All products returned", item})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
