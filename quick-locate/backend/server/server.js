@@ -111,20 +111,20 @@ server.post('/import', async (request, reply) => {
     
     for(const item of listItems){
         try {
-            const [items] = await sql `
-            INSERT INTO items(
-            code, 
-            partnumber, 
-            description, 
-            item_location
-            )
-            VALUES (
-            ${item['Código']},
-            ${item['Partnumber']},
-            ${item['Descrição']},
-            ${item['Localização']}
-            )
-            `
+            // const [items] = await sql `
+            // INSERT INTO item(
+            // code, 
+            // partnumber, 
+            // description, 
+            // location
+            // )
+            // VALUES (
+            // ${item['Código']},
+            // ${item['Partnumber']},
+            // ${item['Descrição']},
+            // ${item['Localização']}
+            // )
+            // `
     } catch (error) {
         console.error(error);
     }
@@ -135,8 +135,8 @@ server.post('/import', async (request, reply) => {
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
-        const items = await sql`SELECT * FROM items`
-        return reply.status(200).send({messsage: "All products returned", items})
+        const items = await sql`SELECT * FROM item`
+        return reply.status(200).send({messsage: "All products returned", item})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
@@ -145,7 +145,7 @@ server.get('/items', async (request, reply) => {
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
-        const locations = await sql `SELECT * FROM locations`
+        const locations = await sql `SELECT * FROM item_location`
         console.log(locations);
         
         return reply.status(200).send({messsage: "All locations returned", locations})
@@ -160,7 +160,7 @@ server.post('/register-new-location', async (request, reply) => {
 
     try {
         const [location] = await sql`
-        INSERT INTO locations(item_location) VALUES (${item_location})
+        INSERT INTO item_location(location) VALUES (${item_location})
         `
         return reply.status(200).send({message: "New locations registered!", location})
     } catch (error) {
@@ -174,8 +174,8 @@ server.post('/delete-location', async (request, reply) => {
 
     try {
         const [location] = await sql`
-        DELETE FROM locations 
-        WHERE item_location=${item_location}
+        DELETE FROM item_location 
+        WHERE location=${item_location}
         `
         return reply.status(200).send({message: "Location deleted", location})
     } catch (error) {

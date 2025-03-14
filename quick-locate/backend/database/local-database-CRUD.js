@@ -3,19 +3,18 @@ import { useSQLiteContext } from 'expo-sqlite';
 export function useLocalDatabase(){
     const database = useSQLiteContext();
     async function storeDataLocally(rows) {
-        const query = `
-        INSERT INTO items (
-        code, 
-        partnumber, 
-        description, 
-        item_location, 
-        date_lastRecord
-        ) 
-        VALUES (?, ?, ?, ?, ?);
-        `
+        // const query = `
+        // INSERT OR IGNORE INTO item (
+        // code, 
+        // partnumber, 
+        // description, 
+        // location, 
+        // ) 
+        // VALUES (?, ?, ?, ?, ?);
+        // `
         for (const item of rows.items) {      
             try {
-                const localResult = await database.runAsync(query, item.code, item.partnumber, item.description, item.item_location, item.date_lastrecord)
+                const localResult = await database.runAsync(query, item.code, item.partnumber, item.description, item.location, item.date_lastrecord)
                 return localResult
             } catch (error) {
                 console.error(error);
@@ -25,7 +24,7 @@ export function useLocalDatabase(){
 
     async function getAllLocalData() {
         try {
-            const query = "SELECT * FROM items"
+            const query = "SELECT * FROM item"
             const response = await database.getAllAsync(query)
             return response
         } catch (error) {
@@ -35,7 +34,7 @@ export function useLocalDatabase(){
 
     async function filter(name, column) {
         try {
-          const query = `SELECT * FROM items WHERE ${column} LIKE ?`
+          const query = `SELECT * FROM item WHERE ${column} LIKE ?`
           const response = await database.getAllAsync(query, `%${name}%`)
           return response
       } catch (error) {
@@ -45,7 +44,7 @@ export function useLocalDatabase(){
 
     async function getItemInformationByCode(code) {
         try {
-            const query = `SELECT * FROM items where code = ?`
+            const query = `SELECT * FROM item where code = ?`
             const response = await database.getAllAsync(query, `${code}`)
             return response
         } catch (error) {
@@ -55,8 +54,8 @@ export function useLocalDatabase(){
 
     async function modifyLocation(code, newLocation) {
         try {
-            const query = `UPDATE items
-            SET item_location = ?
+            const query = `UPDATE item
+            SET location = ?
             WHERE code = ?`
             const response = await database.runAsync(query, `${newLocation}`, `${code}`)
             console.log("Endereço alterado com sucesso!");
@@ -68,7 +67,7 @@ export function useLocalDatabase(){
 
     async function getAllItemsByLocation(location) {
         try {
-            const query = `SELECT code, partnumber, description, item_location FROM items where item_location LIKE ?`
+            const query = `SELECT code, partnumber, description, location FROM item where location LIKE ?`
             const response = await database.getAllAsync(query, `${location}%`)
             return response
         } catch (error) {
@@ -79,8 +78,8 @@ export function useLocalDatabase(){
     async function  listOfLocations() {
         try {
             const query = `
-            SELECT DISTINCT SUBSTR(item_location, 1, 1) AS first_caracter
-            FROM items
+            SELECT DISTINCT SUBSTR(location, 1, 1) AS first_caracter
+            FROM item
             ORDER BY first_caracter
             `
             const response = await database.getAllAsync(query)
@@ -89,6 +88,19 @@ export function useLocalDatabase(){
             console.log(error);
         }
     }
-    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation, listOfLocations}
+
+    async function dropTable() {
+        try {
+            const query = `
+            DROP TABLE items
+            `
+            const response = await database.execAsync(query)
+            console.log(response);
+            
+        } catch (error) {
+            console.error(error)
+        }
+    }
+    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation, listOfLocations, dropTable}
 }
 

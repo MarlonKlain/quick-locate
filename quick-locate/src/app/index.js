@@ -1,8 +1,12 @@
 import 'expo-dev-client';
 import { Link } from "expo-router";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
+import { useLocalDatabase } from '../../backend/database/local-database-CRUD';
+
 
 export default function Index() {
+
+    const localDatabase = useLocalDatabase();
     return (
         <View style={styles.welcomeContainer}>
                 <Image style={styles.quickLocateImg} source={require("../../assets/images/quick-locate-index.png")}/>
@@ -17,6 +21,14 @@ export default function Index() {
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </Pressable>
                     </Link>
+                    <Link href={"(tabs)"} asChild>
+                        <Pressable style={styles.button}>
+                            <Text style={styles.buttonText}>Dashboard</Text>
+                        </Pressable>
+                    </Link>
+                    {/* <Pressable tyle={styles.button} onPress={() => localDatabase.dropTable()}>
+                        <Text style={styles.buttonText}> DROPTABLE </Text>
+                    </Pressable> */}
                 </View>
         </View>  
     )
