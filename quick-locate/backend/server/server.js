@@ -99,7 +99,7 @@ server.post('/login', async (request, reply) => {
     }
 });
 
-server.post('/import', async (request, reply) => {
+server.get('/import', async (request, reply) => {
     // Create a validation that will check if the product already exists in the database
     const sql = neon(process.env.DATABASE_URL);
     
