@@ -1,9 +1,10 @@
 import { readFileSync } from "fs";
 import * as XLSX from "xlsx/xlsx.mjs";
+// import { } from "../../uploads/items.xlsx"
 
 export class ImportTtems {
     async storeData(){
-        const buf = readFileSync({pathname: "../../uploads/items.xlsx"});
+        const buf = readFileSync("../../uploads/items.xlsx");
         /* buf is a Buffer */
         const workbook = XLSX.read(buf);
     
