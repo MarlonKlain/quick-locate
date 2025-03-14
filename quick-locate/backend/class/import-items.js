@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import * as XLSX from "xlsx/xlsx.mjs";mc
+import * as XLSX from "xlsx/xlsx.mjs";
 
 export class ImportTtems {
     async storeData(){

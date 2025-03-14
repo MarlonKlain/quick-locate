@@ -20,7 +20,7 @@ dotenv.config()
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     
-    console.log("Server running on http://localhost:3000");
+    console.log(`Server running on https://quick-locate.onrender.com/${process.env.PORT}`);
 });
 
 
