@@ -4,7 +4,7 @@ import * as XLSX from "xlsx/xlsx.mjs";
 
 export class ImportTtems {
     async storeData(){
-        const buf = readFileSync("../../uploads/items.xlsx");
+        const buf = readFileSync({path:"../../uploads/items.xlsx"});
         /* buf is a Buffer */
         const workbook = XLSX.read(buf);
     
