@@ -1,7 +1,7 @@
 var XLSX = require("xlsx");
 // import { } from "../../uploads/items.xlsx"
 
-export class ImportTtems {
+export default class ImportTtems {
     async storeData(){
         var workbook = XLSX.readFile('./items.xlsx');
         // Select the first sheet
