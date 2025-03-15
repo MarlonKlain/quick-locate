@@ -1,9 +1,11 @@
-var XLSX = require("xlsx");
-// import { } from "../../uploads/items.xlsx"
+import * as XLSX from "xlsx/xlsx.mjs";
+import { readFileSync } from "fs";
 
-function ImportTtems() {
-    async function storeData(){
-        var workbook = XLSX.readFile('./items.xlsx');
+export class ImportTtems {
+    async storeData(){
+        const buf = readFileSync("items.xlsx");
+        /* buf is a Buffer */
+        const workbook = read(buf);
         // Select the first sheet
         const sheetName = workbook.SheetNames[0]; 
         // Get the first sheet name
@@ -16,5 +18,3 @@ function ImportTtems() {
     }
 
 }
-
-export default ImportTtems;
