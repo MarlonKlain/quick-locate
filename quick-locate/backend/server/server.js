@@ -3,7 +3,7 @@ import cors from "@fastify/cors"
 import dotenv from "dotenv";
 import { neon } from '@neondatabase/serverless';
 import bcrypt from "bcryptjs";
-import { ImportTtems } from "../class/import-items";
+import {ImportTtems} from "../class/import-items.js"
 import multer from "multer";
 
 
@@ -103,7 +103,8 @@ server.get('/import', async (request, reply) => {
     // Create a validation that will check if the product already exists in the database
     const sql = neon(process.env.DATABASE_URL);
     
-    let sheet = new ImportTtems()
+    
+    let sheet = new ImportTtems();
 
     const listItems = await sheet.storeData()
     console.log(listItems);
