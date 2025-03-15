@@ -1,5 +1,5 @@
-import { readFile, readFileSync } from "fs";
-import * as XLSX from "xlsx/xlsx.mjs";
+import { readFileSync } from "fs";
+import * as XLSX from "xlsx.mjs";
 // import { } from "../../uploads/items.xlsx"
 
 export class ImportTtems {
