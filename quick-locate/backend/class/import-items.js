@@ -3,7 +3,8 @@ import * as XLSX from "xlsx/xlsx.mjs";
 
 export class ImportTtems {
     async storeData(){
-        const buf = readFileSync("items.xlsx");
+        // The readFileSync use as reference the root of the project in the path and not where the file is at.
+        const buf = readFileSync("./uploads/items.xlsx");
         /* buf is a Buffer */
         const workbook = XLSX.read(buf);
         // Select the first sheet
