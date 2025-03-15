@@ -1,4 +1,3 @@
-import { readFileSync } from "fs";
 var XLSX = require("xlsx");
 // import { } from "../../uploads/items.xlsx"
 

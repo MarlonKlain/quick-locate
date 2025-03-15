@@ -3,7 +3,7 @@ import cors from "@fastify/cors"
 import dotenv from "dotenv";
 import { neon } from '@neondatabase/serverless';
 import bcrypt from "bcryptjs";
-import {ImportTtems} from "../class/import-items.js"
+import {ImportTtems} from "../class/import-items.cjs"
 import multer from "multer";
 
 
