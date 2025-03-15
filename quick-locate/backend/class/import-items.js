@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 
 export class ImportTtems {
     async storeData(){
-        const buf = readFileSync("./items.xlsx");
+        const buf = readFileSync("items.xlsx");
         /* buf is a Buffer */
         const workbook = read(buf);
         // Select the first sheet
