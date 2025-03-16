@@ -108,29 +108,33 @@ server.get('/import', async (request, reply) => {
 
     const itemsList = await sheet.storeData()
     console.log(itemsList);
-        try {
-            await sql`BEGIN;`;
-    
-            for (const item of itemsList) {
-                await sql`
-                INSERT INTO item_location (location)
-                SELECT ${item['location']}
-                WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
-                `;
-    
-                await sql`
-                INSERT INTO item (code, partnumber, description, location)
-                VALUES (${item['code']}, ${item['partnumber']}, ${item['description']}, ${item['location']});
-                `;
-            }
-    
-            await sql`COMMIT;`;
+    try {
+        await sql`BEGIN;`;
+
+        for (const item of itemsList) {
+            await sql`
+            INSERT INTO item_location (location)
+            SELECT ${item['location']}
+            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
+            `;
+
+            await sql`
+            INSERT INTO item (code, partnumber, description, location)
+            VALUES (${item['code']}, ${item['partnumber']}, ${item['description']}, ${item['location']});
+            `;
+        }
+
+        await sql`COMMIT;`;
+
+        return reply.status(200).send({ message: "Import completed successfully" });
+
     } catch (error) {
+        
+        await sql`ROLLBACK;`;
         console.error(error);
+        return reply.status(500).send({ error: "Import failed" });
     }
-}   
-    return reply.status(200).send({ message: "Product not registered", items, locations});
-})
+});
 
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
