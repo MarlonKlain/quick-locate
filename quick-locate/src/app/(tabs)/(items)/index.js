@@ -11,6 +11,7 @@ export default function Items() {
     const [search, setSearch] = useState()
     const [filter , setFilter] = useState('description');
     const [sorter, setSorter] = useState()
+    const [refresh, setRefresh] = useState(false);
     const localDatabase = useLocalDatabase();
     let item = new Item();
     
@@ -30,6 +31,7 @@ export default function Items() {
         }
     }
 
+    //this wont work soon, because if the database receive some update, it wont be pass to the local database
     async function checksLocalDatabase() {
         const response = await localDatabase.getAllLocalData()
         if (response[0] == undefined){
@@ -45,9 +47,25 @@ export default function Items() {
             return true
         }
     }
+
+    const  handleRefresh = async () => {
+        setRefresh(true)
+        const response = await localDatabase.getAllLocalData()
+        setItemsList(response)
+        setRefresh(false)
+    }
     
     useEffect(() => {
        checksLocalDatabase();
+
+       localDatabase.getAllFreeLocations()
+       .then((response) => console.log(response))
+
+       localDatabase.getAllLocalDataLocation()
+       .then((response) => {
+        // console.log("Locations: ", response)       
+    })
+        
     }, []);   
 
     useEffect(() =>{
@@ -98,18 +116,25 @@ export default function Items() {
                     <Text style={styles.headerText}>Location</Text>
                 </View>
                 <FlatList
+                    refreshing={refresh}
+                    onRefresh={handleRefresh}
                     data={itemsList}
                     renderItem={({ item }) => (
-                            <Pressable onLongPress={()=> router.push(`./${item.code}`)}>
-                                <View style={styles.row}>
+                        <Pressable onLongPress={() => router.push(`./${item.code}`)}>
+                            <View style={styles.row}>
+                                {/* Green Square if location is free */}
+                                {item.code ? (
                                     <Text style={styles.cell}>{item.code}</Text>
-                                    <Text style={styles.cell}>{item.partnumber}</Text>
-                                    <Text style={styles.cell}>{item.description}</Text>
-                                    <Text style={styles.cell}>{item.location}</Text>
-                                </View>
-                            </Pressable>
+                                ) : (
+                                    <View style={styles.freeLocation} />
+                                )}
+                                <Text style={styles.cell}>{item.partnumber ?? ""}</Text>
+                                <Text style={styles.cell}>{item.description ?? ""}</Text>
+                                <Text style={styles.cell}>{item.location}</Text>
+                            </View>
+                        </Pressable>
                     )}
-                    keyExtractor={(item) => item.code}
+                    keyExtractor={(item) => item.code ?? item.location}
                 />
             </View>
         </View>
@@ -196,5 +221,15 @@ const styles = StyleSheet.create({
     filters:{
         flex:0.05,
         flexDirection:"row",
-    }
+    }, 
+    freeLocation: {
+        flex:1,
+        width: 20,  // Adjust size as needed
+        height: 20, // Adjust size as needed
+        backgroundColor: "green",
+        alignSelf: "center", // Centers it within the row
+        borderRadius: 4, // Optional: makes it a rounded square
+        marginLeft:5
+    },
+    
 });

@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
 
@@ -42,7 +42,7 @@ export default function itemDetails() {
         <Pressable style={styles.confirmButton} onPress={() => itemInformationFromDatabase.modifyLocation(code, location)}>
           <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
-        <Pressable style={styles.cancelButton}>
+        <Pressable style={styles.cancelButton} onPress={() => router.back()}>
           <Text style={styles.buttonText}>Cancel</Text>
         </Pressable>
       </View>

@@ -27,20 +27,25 @@ export function useLocalDatabase(){
                     $description: item.description,
                     $location: item.location
                 })
-                console.log(resultLocation);
-                console.log(resultItem);
                 }
             } catch (error) {
                 console.error("Insert error:" , error);
             } finally {
-                await statement.finalizeAsync()
+                await statementInsertLocation.finalizeAsync()
+                await statementInsertItem.finalizeAsync()
             }
 
         }
 
     async function getAllLocalData() {
         try {
-            const query = "SELECT * FROM item"
+            const query = `
+            SELECT * from 
+                item i
+                RIGHT JOIN 
+                item_location il
+                ON i.location = il.location
+            `
             const response = await database.getAllAsync(query)
             return response
         } catch (error) {
@@ -60,14 +65,23 @@ export function useLocalDatabase(){
 
     async function filter(name, column) {
         try {
-          const query = `SELECT * FROM item WHERE ${column} LIKE ?`
+        const query = `
+            SELECT * from 
+                item i
+                RIGHT JOIN 
+                item_location il
+                ON i.location = il.location
+                WHERE i.${column} like ?
+            `
           const response = await database.getAllAsync(query, `%${name}%`)
+        //   console.log("Filter: " ,response);
+          
           return response
       } catch (error) {
           console.log("filter: ", error)
         }
     }
-
+ 
     async function getItemInformationByCode(code) {
         try {
             const query = `SELECT * FROM item where code = ?`
@@ -80,14 +94,31 @@ export function useLocalDatabase(){
 
     async function modifyLocation(code, newLocation) {
         try {
-            const query = `UPDATE item
-            SET location = ?
-            WHERE code = ?`
-            const response = await database.runAsync(query, `${newLocation}`, `${code}`)
+
+            const statementInsertLocation  = await database.prepareAsync(`
+                INSERT INTO item_location (location)
+                SELECT $location
+                WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = $location);
+                `)
+            const statementUpdateLocation = await database.prepareAsync( `UPDATE item
+                SET location = $newLocation
+                WHERE code = $code
+                `)
+            const resultInsertLocation = await statementInsertLocation.executeAsync({
+                $location: newLocation
+            })
+
+            const resultUpdateNewLocation = await statementUpdateLocation.executeAsync({
+                $newLocation: newLocation,
+                $code: code
+            })
+
             console.log("Endereço alterado com sucesso!");
-            return response
         } catch (error) {
             console.log(error);
+        } finally {
+            await statementInsertLocation.finalizeAsync()
+            await statementUpdateLocation.finalizeAsync()
         }
     }
 
@@ -101,7 +132,7 @@ export function useLocalDatabase(){
         }
     }
 
-    async function  listOfLocations() {
+    async function listOfLocations() {
         try {
             const query = `
             SELECT DISTINCT SUBSTR(location, 1, 1) AS first_caracter
@@ -128,7 +159,7 @@ export function useLocalDatabase(){
         }
     }
 
-    async function deleteContentDabase(params) {
+    async function deleteContentDabase() {
         try {
             const query = `
             DELETE FROM item
@@ -140,7 +171,24 @@ export function useLocalDatabase(){
             console.log(error);
         }
     }
-    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation, listOfLocations, deleteContentDabase, deleteContentDabase, getAllLocalDataLocation, deleteTableDatabase}
+
+    async function getAllFreeLocations() {
+        try {
+            const query = `
+            SELECT * from 
+                item i
+                RIGHT JOIN 
+                item_location il
+                ON i.location = il.location
+                WHERE i.location IS NULL;
+            `
+            const result = await database.getAllAsync(query)
+            // console.log("Results: ", result);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    return {storeDataLocally, getAllLocalData, filter, getAllLocalData, getItemInformationByCode, modifyLocation, getAllItemsByLocation, listOfLocations, deleteContentDabase, deleteContentDabase, getAllLocalDataLocation, deleteTableDatabase, getAllFreeLocations}
 }
 
 
