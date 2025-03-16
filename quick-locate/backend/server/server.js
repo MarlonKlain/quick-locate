@@ -116,12 +116,14 @@ server.get('/import', async (request, reply) => {
             SELECT ${item['Localização']}
             WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['Localização']});
 
-            `
-            const [items] = await sql `
-            INSERT INTO item (code, partnumber, description, location)
-            VALUES (${item['Código']}, ${item['Partnumber']}, ${item['Descrição']}, ${item['Localização']});
-
-            `
+            `.then(async () => {
+                const [items] = await sql `
+                INSERT INTO item (code, partnumber, description, location)
+                VALUES (${item['Código']}, ${item['Partnumber']}, ${item['Descrição']}, ${item['Localização']});
+                
+                `
+                }
+            )
             // const [items] = await sql `
             // INSERT INTO item(
             // code, 
@@ -140,7 +142,7 @@ server.get('/import', async (request, reply) => {
         console.error(error);
     }
 }   
-    return reply.status(200).send({ message: "Product not registered", item});
+    return reply.status(200).send({ message: "Product not registered", items, locations});
 })
 
 server.get('/items', async (request, reply) => {
