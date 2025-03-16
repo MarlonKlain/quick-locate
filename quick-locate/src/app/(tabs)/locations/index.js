@@ -23,23 +23,7 @@ export default function Items() {
         ]);
       };
     
-
-    //   async function checksLocalDatabase() {
-    //     const response = await localDatabase.getAllItemsByLocation()
-    //     if (!response){
-    //         APIlocations.getAllLocations()
-    //         .then((response) => )
-    //         return false
-    //     } else {
-    //         setItemsList(response)
-    //         return true
-    //     }
-    // }
-
     useEffect(()=>{
-        // APIlocations.getAllLocations().then(async (response) => {
-        //     setLocations(response.locations);
-        // });
         localDatabase.listOfLocations()
         .then(async (response) => {
             setLocations(response)

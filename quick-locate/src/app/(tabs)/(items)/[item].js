@@ -13,7 +13,7 @@ export default function itemDetails() {
   
   useEffect (() => {
     itemInformationFromDatabase.getItemInformationByCode(item)
-    .then((response) => {setCode(response[0].code), setPartnumber(response[0].partnumber), setDescription(response[0].description), setLocation(response[0].item_location)})
+    .then((response) => {setCode(response[0].code), setPartnumber(response[0].partnumber), setDescription(response[0].description), setLocation(response[0].location)})
   }, [])
 
   return (

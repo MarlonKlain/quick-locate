@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Item } from "../../../../backend/class/item"
 import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
 import DropdownComponent from "../../../components/dropdown"
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 
 export default function Items() {
     const [itemsList, setItemsList] = useState([]);
@@ -31,14 +31,14 @@ export default function Items() {
     }
 
     async function checksLocalDatabase() {
-        const response = await localDatabase.getAllLocalData()        
+        const response = await localDatabase.getAllLocalData()
         if (response[0] == undefined){
             item.listItems()
                 .then(async (response) => {
                     localDatabase.storeDataLocally(response)                    
                     setItemsList(await localDatabase.getAllLocalData())
                 });
-                console.log("False");
+                console.log("Cloud loaded");
             return false
         } else {
             setItemsList(response)
@@ -48,11 +48,11 @@ export default function Items() {
     
     useEffect(() => {
        checksLocalDatabase();
-    }, []);    
+    }, []);   
 
     useEffect(() =>{
         listSearch(search, filter)
-    },[search])
+    },[search, sorter])
 
     return (
         <View style={styles.container}>
@@ -76,7 +76,7 @@ export default function Items() {
                     { label: 'Código', value: 'code' },
                     { label: 'Partnumber', value: 'partnumber' },
                     { label: 'Descrição', value: 'description' },
-                    { label: 'Localização', value: 'item_location' },
+                    { label: 'Localização', value: 'location' },
                 ]}
                 label={"Filtros"}
                 onSendValue={setFilter}/>
@@ -105,7 +105,7 @@ export default function Items() {
                                     <Text style={styles.cell}>{item.code}</Text>
                                     <Text style={styles.cell}>{item.partnumber}</Text>
                                     <Text style={styles.cell}>{item.description}</Text>
-                                    <Text style={styles.cell}>{item.item_location}</Text>
+                                    <Text style={styles.cell}>{item.location}</Text>
                                 </View>
                             </Pressable>
                     )}

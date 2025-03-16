@@ -3,14 +3,28 @@ import * as SQLite from 'expo-sqlite'
 export async function createLocalDatabase(){
     const db = await SQLite.openDatabaseAsync('items-local-database.db');    
     await db.execAsync(`
-        CREATE TABLE IF NOT EXISTS items(
-            id_item INTEGER PRIMARY KEY AUTOINCREMENT, 
-            code TEXT NOT NULL UNIQUE, 
-            partnumber TEXT NOT NULL, 
-            description TEXT NOT NULL, 
-            item_location TEXT NOT NULL, 
-            date_lastRecord TEXT NOT NULL
-            )
+        PRAGMA foreign_keys = ON;
+
+        CREATE TABLE IF NOT EXISTS item ( 
+            code TEXT PRIMARY KEY, 
+            partnumber TEXT, 
+            description TEXT,
+            location text, 
+            FOREIGN KEY (location) REFERENCES item_location(location)
+        );
+
+        CREATE TABLE IF NOT EXISTS item_location (
+            location TEXT PRIMARY KEY
+        );
+
+        CREATE TABLE IF NOT EXISTS item_location_history (
+            id INTEGER PRIMARY KEY ,
+            item_code TEXT,
+            location TEXT,
+            moved_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (item_code) REFERENCES item(code),
+            FOREIGN KEY (location) REFERENCES location(location)
+        );
             `);
     console.log("Local database created successfully");
     
