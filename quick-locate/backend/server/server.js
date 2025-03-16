@@ -111,21 +111,17 @@ server.get('/import', async (request, reply) => {
     
     for(const item of itemsList){
         try {
-            const [items] = await sql `
-            BEGIN;
-    
+            const [locations] = await sql `
             INSERT INTO item_location (location)
             SELECT ${item['Localização']}
             WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['Localização']});
 
+            `
+            const [items] = await sql `
             INSERT INTO item (code, partnumber, description, location)
             VALUES (${item['Código']}, ${item['Partnumber']}, ${item['Descrição']}, ${item['Localização']});
 
-            COMMIT;
             `
-
-
-
             // const [items] = await sql `
             // INSERT INTO item(
             // code, 
