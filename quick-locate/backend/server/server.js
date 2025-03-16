@@ -113,13 +113,13 @@ server.get('/import', async (request, reply) => {
         try {
             const [locations] = await sql `
             INSERT INTO item_location (location)
-            SELECT ${item['Localização']}
-            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['Localização']});
+            SELECT ${item['location']}
+            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
 
             `.then(async () => {
                 const [items] = await sql `
                 INSERT INTO item (code, partnumber, description, location)
-                VALUES (${item['Código']}, ${item['Partnumber']}, ${item['Descrição']}, ${item['Localização']});
+                VALUES (${item['code']}, ${item['partnumber']}, ${item['description']}, ${item['location']});
                 
                 `
                 }
