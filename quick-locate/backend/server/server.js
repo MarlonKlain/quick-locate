@@ -108,36 +108,23 @@ server.get('/import', async (request, reply) => {
 
     const itemsList = await sheet.storeData()
     console.log(itemsList);
-    
-    for(const item of itemsList){
         try {
-            const [locations] = await sql `
-            INSERT INTO item_location (location)
-            SELECT ${item['location']}
-            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
-
-            `.then(async () => {
-                const [items] = await sql `
+            await sql`BEGIN;`;
+    
+            for (const item of itemsList) {
+                await sql`
+                INSERT INTO item_location (location)
+                SELECT ${item['location']}
+                WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
+                `;
+    
+                await sql`
                 INSERT INTO item (code, partnumber, description, location)
                 VALUES (${item['code']}, ${item['partnumber']}, ${item['description']}, ${item['location']});
-                
-                `
-                }
-            )
-            // const [items] = await sql `
-            // INSERT INTO item(
-            // code, 
-            // partnumber, 
-            // description, 
-            // location
-            // )
-            // VALUES (
-            // ${item['Código']},
-            // ${item['Partnumber']},
-            // ${item['Descrição']},
-            // ${item['Localização']}
-            // )
-            // `
+                `;
+            }
+    
+            await sql`COMMIT;`;
     } catch (error) {
         console.error(error);
     }
