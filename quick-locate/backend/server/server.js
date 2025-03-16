@@ -106,36 +106,51 @@ server.get('/import', async (request, reply) => {
     
     let sheet = new ImportTtems();
 
-    const listItems = await sheet.storeData()
-    console.log(listItems);
+    const itemsList = await sheet.storeData()
+    console.log(itemsList);
     
-    for(const item of listItems){
+    for(const item of itemsList){
         try {
             const [items] = await sql `
-            INSERT INTO items(
-            code, 
-            partnumber, 
-            description, 
-            item_location
-            )
-            VALUES (
-            ${item['Código']},
-            ${item['Partnumber']},
-            ${item['Descrição']},
-            ${item['Localização']}
-            )
+            BEGIN;
+    
+            INSERT INTO item_location (location)
+            SELECT ${item['Localização']}
+            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['Localização']});
+
+            INSERT INTO item (code, partnumber, description, location)
+            VALUES (${item['Código']}, ${item['Partnumber']}, ${item['Descrição']}, ${item['Localização']});
+
+            COMMIT;
             `
+
+
+
+            // const [items] = await sql `
+            // INSERT INTO item(
+            // code, 
+            // partnumber, 
+            // description, 
+            // location
+            // )
+            // VALUES (
+            // ${item['Código']},
+            // ${item['Partnumber']},
+            // ${item['Descrição']},
+            // ${item['Localização']}
+            // )
+            // `
     } catch (error) {
         console.error(error);
     }
 }   
-    return reply.status(200).send({ message: "Product not registered", items});
+    return reply.status(200).send({ message: "Product not registered", item});
 })
 
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
-        const items = await sql`SELECT * FROM items`
+        const items = await sql`SELECT * FROM item`
         return reply.status(200).send({messsage: "All products returned", items})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
