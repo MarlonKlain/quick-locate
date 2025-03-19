@@ -40,11 +40,11 @@ export default function Items() {
                     </View>
                 </View>
             </View> */}
-            <View style={styles.addLocationContainer}>
+            {/* <View style={styles.addLocationContainer}>
                 <Pressable style={styles.AddLocationButton} onPress={() => setModalVisible(true)}>
-                    <Text style={styles.addButtonText}>Add location</Text>
+                    <Text style={styles.addButtonText}>Endereços Livres</Text>
                 </Pressable>
-            </View>
+            </View> */}
             <Modal
             visible={isModalVisible}
             onRequestClose={() => setModalVisible(false)}
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     productContainer: {
-        flex: 0.8,
+        flex: 1,
         width: "100%",
     },
     addLocationContainer: {

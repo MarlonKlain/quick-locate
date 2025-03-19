@@ -1,23 +1,58 @@
-import { StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
+import {FontAwesome} from "@expo/vector-icons"
 
 export default function itemDetails() {
   const [code, setCode] = useState();
   const [partnumber, setPartnumber] = useState();
   const [description, setDescription] = useState();
   const [location, setLocation] = useState();
-  const itemInformationFromDatabase = useLocalDatabase();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [locationsList, setLocationsList] = useState();
+  const localDatabase = useLocalDatabase();
   const { item } = useLocalSearchParams();
   
   useEffect (() => {
-    itemInformationFromDatabase.getItemInformationByCode(item)
-    .then((response) => {setCode(response[0].code), setPartnumber(response[0].partnumber), setDescription(response[0].description), setLocation(response[0].location)})
+    localDatabase.getItemInformationByCode(item)
+    .then((response) => {
+      setCode(response[0].code), 
+      setPartnumber(response[0].partnumber), 
+      setDescription(response[0].description), 
+      setLocation(response[0].location)})
+    localDatabase.getAllFreeLocations()
+    .then((response) => {
+      // console.log("Free locations: ", response);
+      setLocationsList(response)
+    }
+    )
   }, [])
 
   return (
     <View style={styles.container}>
+        <Modal
+        visible={isModalVisible}
+        onRequestClose={() => setModalVisible(false)}
+        animationType='fade'
+        presentationStyle='pageSheet'>
+          <View style={{flex:1, padding:20}}>
+          <FlatList
+          data={locationsList}
+          renderItem={({item}) => (
+            <Pressable onPress={() => {
+              setLocation(item.location)
+              setModalVisible(false)
+            }}>
+              <View style={styles.row}>
+                <Text style={styles.label}>{item.location}</Text>
+              </View>
+            </Pressable>
+          )}
+          keyExtractor={(item) => item.location}
+          />
+        </View>
+      </Modal>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Code</Text>
         <TextInput style={styles.input} value={code} editable={false} />
@@ -32,14 +67,19 @@ export default function itemDetails() {
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Location</Text>
-        <TextInput style={styles.input} value={location} onChangeText={setLocation} />
+        <View style={{flexDirection:'row'}}>
+          <TextInput style={{...styles.input, width:"88%", marginRight:"2%"}} value={location} onChangeText={setLocation} />
+          <Pressable style={{width:"10%", alignContent:'center', justifyContent:'center'}} onPress={() => setModalVisible(true)}>
+            <FontAwesome name='plus-square' size={36} color={"#35B369"}/>
+          </Pressable>
+        </View>
       </View>
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Image</Text>
         <TextInput style={styles.input} editable={false} />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.confirmButton} onPress={() => itemInformationFromDatabase.modifyLocation(code, location)}>
+        <Pressable style={styles.confirmButton} onPress={() => localDatabase.modifyLocation(code, location)}>
           <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
         <Pressable style={styles.cancelButton} onPress={() => router.back()}>
@@ -104,4 +144,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: ''
   },
+  row: {
+    flexDirection: "row",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingVertical: 10,
+    alignItems:"center",
+    justifyContent:'center'
+},
 });

@@ -183,7 +183,7 @@ export function useLocalDatabase(){
                 WHERE i.location IS NULL;
             `
             const result = await database.getAllAsync(query)
-            // console.log("Results: ", result);
+            return result
         } catch (error) {
             console.log(error)
         }
