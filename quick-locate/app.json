@@ -24,8 +24,7 @@
     "web": {
     },
     "plugins": [
-      "expo-router",
-      "expo-sqlite"
+      "expo-router"
     ]
   }
 }

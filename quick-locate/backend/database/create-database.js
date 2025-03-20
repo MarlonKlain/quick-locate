@@ -1,4 +1,4 @@
-import * as SQLite from 'expo-sqlite'
+// import * as SQLite from 'expo-sqlite'
 
 export async function createLocalDatabase(){
     const db = await SQLite.openDatabaseAsync('items-local-database.db');    

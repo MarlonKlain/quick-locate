@@ -3,7 +3,7 @@ import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Locations } from "../../../../backend/class/locations"
 import { router } from "expo-router";
-import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
+// import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
 import { Item } from "../../../../backend/class/item";
 
 
@@ -13,7 +13,7 @@ export default function Items() {
     const [isModalVisible, setModalVisible] = useState(false)
     const [newLocation, setNewLocation] = useState()
     const APIlocations = new Locations();
-    const localDatabase = useLocalDatabase()
+    // const localDatabase = useLocalDatabase()
 
     function deleteLocation (location) {
         Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
@@ -24,10 +24,10 @@ export default function Items() {
       };
     
     useEffect(()=>{
-        localDatabase.listOfLocations()
-        .then(async (response) => {
-            setLocations(response)
-        })
+        // localDatabase.listOfLocations()
+        // .then(async (response) => {
+        //     setLocations(response)
+        // })
     }, [isModalVisible])
 
     return (

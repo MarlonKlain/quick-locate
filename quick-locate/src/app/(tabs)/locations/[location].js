@@ -1,22 +1,22 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react"
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
+// import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
 import { FlatList } from "react-native";
 
 
 export default function ScreenItemsByLocation(){
   const [itemsByLocation, setItemsByLocation] = useState();
   const { location } = useLocalSearchParams();
-  const localDatabase = useLocalDatabase();
+  // const localDatabase = useLocalDatabase();
 
   useEffect(() => {
-    localDatabase.getAllItemsByLocation(location)
-    .then((response) => {
-      setItemsByLocation(response)
-      // console.log(response);
+    // localDatabase.getAllItemsByLocation(location)
+    // .then((response) => {
+    //   setItemsByLocation(response)
+    //   // console.log(response);
       
-    })
+    // })
   }, [location])
 
   // if (itemsByLocation) {

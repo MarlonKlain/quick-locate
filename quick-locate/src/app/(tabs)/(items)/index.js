@@ -2,7 +2,7 @@ import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert } from "r
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Item } from "../../../../backend/class/item"
-import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
+// import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
 import DropdownComponent from "../../../components/dropdown"
 import { router } from "expo-router";
 
@@ -12,60 +12,63 @@ export default function Items() {
     const [filter , setFilter] = useState('description');
     const [sorter, setSorter] = useState()
     const [refresh, setRefresh] = useState(false);
-    const localDatabase = useLocalDatabase();
+    // const localDatabase = useLocalDatabase();
     let item = new Item();
     
 
     async function listSearch(name, column) {
-        try {
-            const response = await localDatabase.filter(name, column)
-            if (sorter == "OC"){
-                response.sort((a, b) => a[column] - b[column])
-            } else if (sorter ==  "OD"){
-                response.sort((a, b) => b[column] - a[column])
-            }
-            setItemsList(response)
-        } catch (error) {
-            console.log("listSearch: ", error);
+        // try {
+        //     const response = await localDatabase.filter(name, column)
+        //     if (sorter == "OC"){
+        //         response.sort((a, b) => a[column] - b[column])
+        //     } else if (sorter ==  "OD"){
+        //         response.sort((a, b) => b[column] - a[column])
+        //     }
+        //     setItemsList(response)
+        // } catch (error) {
+        //     console.log("listSearch: ", error);
             
-        }
+        // }
     }
 
     //this wont work soon, because if the database receive some update, it wont be pass to the local database
-    async function checksLocalDatabase() {
-        const response = await localDatabase.getAllLocalData()
-        if (response[0] == undefined){
-            item.listItems()
-                .then(async (response) => {
-                    localDatabase.storeDataLocally(response)                    
-                    setItemsList(await localDatabase.getAllLocalData())
-                });
-                console.log("Cloud loaded");
-            return false
-        } else {
-            setItemsList(response)
-            return true
-        }
-    }
+    // async function checksLocalDatabase() {
+    //     const response = await localDatabase.getAllLocalData()
+    //     if (response[0] == undefined){
+    //         item.listItems()
+    //             .then(async (response) => {
+    //                 localDatabase.storeDataLocally(response)                    
+    //                 setItemsList(await localDatabase.getAllLocalData())
+    //             });
+    //             console.log("Cloud loaded");
+    //         return false
+    //     } else {
+    //         setItemsList(response)
+    //         return true
+    //     }
+    // }
 
     const  handleRefresh = async () => {
         setRefresh(true)
-        const response = await localDatabase.getAllLocalData()
-        setItemsList(response)
+        // const response = await localDatabase.getAllLocalData()
+        // setItemsList(response)
         setRefresh(false)
     }
     
     useEffect(() => {
-       checksLocalDatabase();
+    //    checksLocalDatabase();
 
-       localDatabase.getAllFreeLocations()
-       .then((response) => console.log(response))
+    //    localDatabase.getAllFreeLocations()
+    //    .then((response) => console.log(response))
 
-       localDatabase.getAllLocalDataLocation()
-       .then((response) => {
-        // console.log("Locations: ", response)       
-    })
-        
+    //    localDatabase.getAllLocalDataLocation()
+    //    .then((response) => {
+    //     // console.log("Locations: ", response)       
+    // })
+    console.log("Aqui");
+    
+        item.getItemsListFromDatabase()
+        .then((response) => {setItemsList(response.items)})
     }, []);   
 
     useEffect(() =>{

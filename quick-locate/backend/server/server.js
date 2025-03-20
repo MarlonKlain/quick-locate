@@ -20,7 +20,7 @@ dotenv.config()
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     
-    console.log("Server running on http://localhost:3000");
+    console.log(`Server running!`);
 });
 
 
@@ -145,7 +145,21 @@ server.get('/items', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
 })
-
+server.get('/items/:code', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL);
+    const code = request.params
+    console.log(code);
+    
+    try {
+        const items = await sql`
+        SELECT * FROM item 
+        WHERE code = ${code}
+        `
+        return reply.status(200).send({messsage: "All products returned", items})
+    } catch (error) {
+        return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+    }
+})
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {

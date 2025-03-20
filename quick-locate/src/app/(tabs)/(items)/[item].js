@@ -1,8 +1,9 @@
 import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
+// import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
 import {FontAwesome} from "@expo/vector-icons"
+import { Item } from '../../../../backend/class/item';
 
 export default function itemDetails() {
   const [code, setCode] = useState();
@@ -11,22 +12,32 @@ export default function itemDetails() {
   const [location, setLocation] = useState();
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
-  const localDatabase = useLocalDatabase();
+  // const localDatabase = useLocalDatabase();
   const { item } = useLocalSearchParams();
-  
+
+  let itemsInfo = new Item()
+
   useEffect (() => {
-    localDatabase.getItemInformationByCode(item)
+    // localDatabase.getItemInformationByCode(item)
+    // .then((response) => {
+    //   setCode(response[0].code), 
+    //   setPartnumber(response[0].partnumber), 
+    //   setDescription(response[0].description), 
+    //   setLocation(response[0].location)})
+    // localDatabase.getAllFreeLocations()
+    // .then((response) => {
+    //   // console.log("Free locations: ", response);
+    //   setLocationsList(response)
+    // }
+    // )
+    itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
-      setCode(response[0].code), 
-      setPartnumber(response[0].partnumber), 
-      setDescription(response[0].description), 
-      setLocation(response[0].location)})
-    localDatabase.getAllFreeLocations()
-    .then((response) => {
-      // console.log("Free locations: ", response);
-      setLocationsList(response)
-    }
-    )
+      console.log(response);
+      setCode(response.code)
+      setPartnumber(response.partnumber)
+      setDescription(response.description)
+      setLocation(response.location)
+    })
   }, [])
 
   return (

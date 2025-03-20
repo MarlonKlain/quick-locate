@@ -3,7 +3,7 @@ import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 // import { useLocalDatabase } from '../../backend/database/local-database-CRUD';
 
 export default function Index() {
-    const localDatabase = useLocalDatabase();
+    // const localDatabase = useLocalDatabase();
     return (
         <View style={styles.welcomeContainer}>
                 <Image style={styles.quickLocateImg} source={require("../../assets/images/quick-locate-index.png")}/>
