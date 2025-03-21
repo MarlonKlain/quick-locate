@@ -147,14 +147,16 @@ server.get('/items', async (request, reply) => {
 })
 server.get('/items/:code', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    const code = request.params
-    console.log(code);
+    const code = request.query.code;
+    console.log("Server2:", code);
     
     try {
         const items = await sql`
         SELECT * FROM item 
         WHERE code = ${code}
         `
+        console.log(items);
+        
         return reply.status(200).send({messsage: "All products returned", items})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});

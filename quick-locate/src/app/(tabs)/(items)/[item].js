@@ -30,9 +30,11 @@ export default function itemDetails() {
     //   setLocationsList(response)
     // }
     // )
+ 
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
-      console.log(response);
+
+      console.log("Server: ", response);
       setCode(response.code)
       setPartnumber(response.partnumber)
       setDescription(response.description)

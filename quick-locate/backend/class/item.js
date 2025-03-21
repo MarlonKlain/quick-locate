@@ -10,7 +10,6 @@ export class Item {
                     },
                 });
                 const result = await response.json();
-                console.log(result);
                 return result
             } catch (error) {
                 console.error("Error:", error);
@@ -18,13 +17,12 @@ export class Item {
         } else {
             try {
                 const response = await fetch(`https://quick-locate.onrender.com/items/${code}`, {
-                    method: "POST",
+                    method: "GET",
                     headers: {
                         "Content-Type": "application/json"
                     },
                 });
                 const result = await response.json();
-                console.log(result);
                 return result
             } catch (error) {
                 console.error("Error:", error);
