@@ -66,9 +66,8 @@ export default function Items() {
     //     // console.log("Locations: ", response)       
     // })
     console.log("Aqui");
-    
         item.getItemsListFromDatabase()
-        .then((response) => {setItemsList(response.items)})
+        .then((response) => {console.log(response); setItemsList(response.items)})
     }, []);   
 
     useEffect(() =>{

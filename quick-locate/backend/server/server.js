@@ -198,3 +198,27 @@ server.post('/delete-location', async (request, reply) => {
         return reply.status(400).send({message: "Something went wrong on deleting new location!", error: error.message})  
     } 
 })
+
+server.put('/modify-location', async(request, reply) =>{
+    const {code, location} = request.body
+    try {
+        await sql`BEGIN;`;
+            await sql`
+            INSERT INTO item_location (location)
+            SELECT ${location}
+            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${location});
+            `;
+
+            await sql`
+            UPDATE item 
+            SET location = ${location}
+            WHERE code = ${code}
+            `;
+        await sql`COMMIT;`;
+
+        reply.status(200).send({message: "Location updated!"})
+    } catch (error) {
+        reply.status(400).send({message: "Something went wrong when updating location"})
+    }
+
+})

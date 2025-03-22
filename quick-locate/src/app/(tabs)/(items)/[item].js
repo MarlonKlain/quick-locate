@@ -82,7 +82,7 @@ export default function itemDetails() {
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Location</Text>
         <View style={{flexDirection:'row'}}>
-          <TextInput style={{...styles.input, width:"88%", marginRight:"2%"}} value={location} onChangeText={setLocation} />
+          <TextInput style={{...styles.input, width:"88%", marginRight:"2%"}} value={location} onChangeText={(text) => setLocation(text.toUpperCase())} autoCapitalize='characters'/>
           <Pressable style={{width:"10%", alignContent:'center', justifyContent:'center'}} onPress={() => setModalVisible(true)}>
             <FontAwesome name='plus-square' size={36} color={"#35B369"}/>
           </Pressable>
@@ -93,7 +93,7 @@ export default function itemDetails() {
         <TextInput style={styles.input} editable={false} />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.confirmButton} onPress={() => localDatabase.modifyLocation(code, location)}>
+        <Pressable style={styles.confirmButton} onPress={() => itemsInfo.modifyLocation(code, location)}>
           <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
         <Pressable style={styles.cancelButton} onPress={() => router.back()}>
