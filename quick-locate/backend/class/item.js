@@ -35,16 +35,17 @@ export class Item {
             code: code,
             location: location
         }
+
         try {
-            const response = await fetch(`https://quick-locate.onrender.com/modify-location`, {
+            const response = await fetch("https://quick-locate.onrender.com/modify-location", {
                 method: "PUT",
                 headers: {
-                    "Content-Type:": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             });
-            
             const result = await response.json()
+            console.log(result);
             return result
         } catch (error) {
             console.log(error);

@@ -218,7 +218,7 @@ server.put('/modify-location', async(request, reply) =>{
 
         reply.status(200).send({message: "Location updated!"})
     } catch (error) {
-        reply.status(400).send({message: "Something went wrong when updating location"})
+        reply.status(400).send({message: "Something went wrong when updating location", error: error.message})
     }
 
 })
