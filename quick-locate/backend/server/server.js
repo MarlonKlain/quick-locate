@@ -200,6 +200,7 @@ server.post('/delete-location', async (request, reply) => {
 })
 
 server.put('/modify-location', async(request, reply) =>{
+    const sql = neon(process.env.DATABASE_URL);
     const {code, location} = request.body
     try {
         await sql`BEGIN;`;
