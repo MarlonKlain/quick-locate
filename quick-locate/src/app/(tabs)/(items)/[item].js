@@ -23,7 +23,7 @@ export default function itemDetails() {
     locations.getAllFreeLocations()
     .then((response) => {
       console.log("Free locations: ", response);
-      setLocationsList(response)
+      setLocationsList(response.freeLocations)
     }
     )
  

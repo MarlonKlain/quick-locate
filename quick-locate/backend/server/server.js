@@ -227,8 +227,8 @@ server.put('/modify-location', async(request, reply) =>{
 server.get('/all-free-locations', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     try {
-        const [freeLocations] = await sql`
-        SELECT il.location from 
+        const freeLocations = await sql`
+        SELECT * from 
         item_location il
         LEFT JOIN item i
         ON il.location = i.location
