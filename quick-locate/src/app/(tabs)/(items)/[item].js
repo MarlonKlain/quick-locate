@@ -33,6 +33,7 @@ export default function itemDetails() {
  
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
+      // console.log("Response: ", response);
       response.items.forEach(element => {
         setCode(element.code)
         setPartnumber(element.partnumber)

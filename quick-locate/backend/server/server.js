@@ -138,31 +138,26 @@ server.get('/import', async (request, reply) => {
 
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    const code = request.params.code;
-    
-    if (code == undefined){
-        console.log("Sem código");
-        try {
-            const items = await sql`SELECT * FROM item`
-            return reply.status(200).send({messsage: "All products returned", items})
-        } catch (error) {
-            return reply.status(400).send({ message: "Failed to get the items", error: error.message});
-        }
-    } else {
-        console.log("Com código");
-        try {
-            const items = await sql`
-            SELECT * FROM item 
-            WHERE code = ${code}
-            `
-            return reply.status(200).send({messsage: "All products returned", items})
-        } catch (error) {
-            return reply.status(400).send({ message: "Failed to get the items", error: error.message});
-        }
+    try {
+        const items = await sql`SELECT * FROM item`
+        return reply.status(200).send({messsage: "All products returned", items})
+    } catch (error) {
+        return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
-    
 })
-
+server.get('/items/:code', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL);
+    const code = request.query.code;
+    try {
+        const items = await sql`
+        SELECT * FROM item 
+        WHERE code = ${code}
+        `
+        return reply.status(200).send({messsage: "All products returned", items})
+    } catch (error) {
+        return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+    }
+})
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
