@@ -33,12 +33,12 @@ export default function itemDetails() {
  
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
-
-      console.log("Server: ", response);
-      setCode(response.code)
-      setPartnumber(response.partnumber)
-      setDescription(response.description)
-      setLocation(response.location)
+      response.items.forEach(element => {
+        setCode(element.code)
+        setPartnumber(element.partnumber)
+        setDescription(element.description)
+        setLocation(element.location)
+      });
     })
   }, [])
 
