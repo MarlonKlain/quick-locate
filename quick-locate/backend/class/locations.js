@@ -18,21 +18,15 @@ export class Locations {
         }
     }
 
-    async registerNewLocation(location){
-        const data = {
-            item_location: location
-        }
+    async getAllLocations (){
         try {
-            const response = await fetch("https://quick-locate.onrender.com/register-new-location", {
-                method:"POST",
+            const response = await fetch("https://quick-locate.onrender.com/locations", {
+                method: "GET",
                 headers: {
-                    "Content-Type" : "application/json"
-                },
-                body: JSON.stringify(data)
-            });
+                    "Content-Type": "application/json"
+                }
+            })
             const result = await response.json()
-            console.log(result);
-            
             return result
         } catch (error) {
             console.error(error);

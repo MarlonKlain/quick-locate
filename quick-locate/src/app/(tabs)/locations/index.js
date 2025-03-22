@@ -3,17 +3,16 @@ import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Locations } from "../../../../backend/class/locations"
 import { router } from "expo-router";
-// import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
 import { Item } from "../../../../backend/class/item";
 
 
 
 export default function Items() {
-    const [locations, setLocations] = useState();
+    const [locationsList, setLocationsList] = useState();
     const [isModalVisible, setModalVisible] = useState(false)
     const [newLocation, setNewLocation] = useState()
-    const APIlocations = new Locations();
-    // const localDatabase = useLocalDatabase()
+    const locations = new Locations();
+
 
     function deleteLocation (location) {
         Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
@@ -24,10 +23,10 @@ export default function Items() {
       };
     
     useEffect(()=>{
-        // localDatabase.listOfLocations()
-        // .then(async (response) => {
-        //     setLocations(response)
-        // })
+        locations.getAllLocations()
+        .then((response) => {
+            
+        })
     }, [isModalVisible])
 
     return (
@@ -69,7 +68,7 @@ export default function Items() {
                     <Text style={styles.locationsTitleText}>Locations</Text>
                 </View>
                 <FlatList
-                    data={locations}
+                    data={locationsList}
                     renderItem={({ item }) => (
                         <Pressable onLongPress={() => deleteLocation(item.first_caracter)} onPress={() => router.push(`./locations/${item.first_caracter}`)}>
                             <View style={styles.card}>

@@ -161,9 +161,11 @@ server.get('/items/:code', async (request, reply) => {
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
-        const locations = await sql `SELECT * FROM locations`
-        console.log(locations);
-        
+        const locations = await sql`
+        SELECT DISTINCT LEFT(location, 1) AS first_character
+        FROM item
+        ORDER BY first_character;
+        `
         return reply.status(200).send({messsage: "All locations returned", locations})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the locations", error: error.message});
