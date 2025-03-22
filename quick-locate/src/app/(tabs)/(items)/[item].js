@@ -4,6 +4,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {FontAwesome} from "@expo/vector-icons"
 import { Item } from '../../../../backend/class/item';
+import { Locations } from '../../../../backend/class/locations';
 
 export default function itemDetails() {
   const [code, setCode] = useState();
@@ -16,20 +17,15 @@ export default function itemDetails() {
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
+  const locations = new Locations();
 
   useEffect (() => {
-    // localDatabase.getItemInformationByCode(item)
-    // .then((response) => {
-    //   setCode(response[0].code), 
-    //   setPartnumber(response[0].partnumber), 
-    //   setDescription(response[0].description), 
-    //   setLocation(response[0].location)})
-    // localDatabase.getAllFreeLocations()
-    // .then((response) => {
-    //   // console.log("Free locations: ", response);
-    //   setLocationsList(response)
-    // }
-    // )
+    locations.getAllFreeLocations()
+    .then((response) => {
+      console.log("Free locations: ", response);
+      setLocationsList(response)
+    }
+    )
  
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {

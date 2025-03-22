@@ -1,8 +1,8 @@
 export class Locations {
 
-    async getAllLocations(){
+    async getAllFreeLocations(){
         try {
-            const response = await fetch("https://quick-locate.onrender.com/locations", {
+            const response = await fetch("https://quick-locate.onrender.com/all-free-locations", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
