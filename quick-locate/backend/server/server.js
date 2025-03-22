@@ -228,11 +228,11 @@ server.get('/all-free-locations', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     try {
         const [freeLocations] = await sql`
-        SELECT * from 
+        SELECT il.location from 
         item_location il
         LEFT JOIN item i
         ON il.location = i.location
-        WHERE i.location is null
+        WHERE i.location is null;
         `
         return reply.status(200).send({message: "All free locations returned", freeLocations})
     } catch (error) {
