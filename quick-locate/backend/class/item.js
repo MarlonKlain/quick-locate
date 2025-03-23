@@ -52,18 +52,30 @@ export class Item {
         }
     }
 
-    async filter(column, filter, sorter = "ASC"){
+    async filter(column, filter, sorter){
         try {
-            const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}&sorter=${sorter}`, {
+            const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
             const result = await response.json()
-            console.log(result);
-            
-            return result
+            console.log(result.filterResult);
+            if(sorter == "ASC"){
+                const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
+                console.log(resultSorted);
+                
+                // return resultSorted
+            } else if(sorter == "DESC"){
+                const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> b-a)
+                console.log(resultSorted);
+                
+                // return resultSorted
+            } else {
+                console.log(result);
+                // return result
+            }
         } catch (error) {
             console.log(error)
         }
