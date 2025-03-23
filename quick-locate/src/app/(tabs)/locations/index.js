@@ -68,14 +68,14 @@ export default function Items() {
                 <FlatList
                     data={locationsList}
                     renderItem={({ item }) => (
-                        <Pressable onLongPress={() => deleteLocation(item.first_character)} onPress={() => router.push(`./locations/${item.first_caracter}`)}>
+                        <Pressable onLongPress={() => deleteLocation(item.first_character)} onPress={() => router.push(`./locations/${item.first_character}`)}>
                             <View style={styles.card}>
                                 <Text style={styles.cardText}>{item.first_character}</Text>
                             </View>
                         </Pressable>
                     )}
                     keyExtractor={(item) => item.first_character}
-                    numColumns={2}
+                    numColumns={4}
                     columnWrapperStyle={styles.row}
                 />
             </View>

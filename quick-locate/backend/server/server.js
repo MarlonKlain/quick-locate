@@ -181,7 +181,7 @@ server.get('/locations/:location', async (request, reply) => {
         SELECT * FROM item i
         RIGHT JOIN item_location il
         ON i.location = il.location
-        WHERE il.location LIKE '${location}%'    
+        WHERE il.location LIKE ${location}%  
         `
         return reply.status(200).send({message: "All items of the select location were returned", itemsByLocation})
     } catch (error) {

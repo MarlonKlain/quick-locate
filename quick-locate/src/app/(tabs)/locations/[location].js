@@ -8,17 +8,16 @@ import { Locations } from "../../../../backend/class/locations";
 
 export default function ScreenItemsByLocation(){
   const [itemsByLocation, setItemsByLocation] = useState();
-  const { location } = useLocalSearchParams();
+  const {location} = useLocalSearchParams();
   const itemByLocationList = new Locations();
-  
 
   useEffect(() => {
-    itemByLocationList.getLocations(location)
-    .then((response) => {
+    itemByLocationList.getLocations(location).
+    then((response) => {
       console.log(response);
-      
     })
   }, [location])
+
 
   return(
     <View style={styles.container}>

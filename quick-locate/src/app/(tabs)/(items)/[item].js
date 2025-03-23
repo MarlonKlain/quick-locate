@@ -13,7 +13,6 @@ export default function itemDetails() {
   const [location, setLocation] = useState();
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
-  // const localDatabase = useLocalDatabase();
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
