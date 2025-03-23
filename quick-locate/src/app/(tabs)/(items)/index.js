@@ -1,6 +1,6 @@
-import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert } from "react-native";
+import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert, TextComponent } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Item } from "../../../../backend/class/item"
 // import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
 import DropdownComponent from "../../../components/dropdown"
@@ -9,64 +9,41 @@ import { router } from "expo-router";
 export default function Items() {
     const [itemsList, setItemsList] = useState([]);
     const [search, setSearch] = useState()
-    const [filter , setFilter] = useState('description');
+    const [column , setColumn] = useState('description');
     const [sorter, setSorter] = useState()
     const [refresh, setRefresh] = useState(false);
-    // const localDatabase = useLocalDatabase();
     let item = new Item();
     
-
-    // async function listSearch(name, column) {
-    //     try {
-    //         const response = await localDatabase.filter(name, column)
-    //         if (sorter == "OC"){
-    //             response.sort((a, b) => a[column] - b[column])
-    //         } else if (sorter ==  "OD"){
-    //             response.sort((a, b) => b[column] - a[column])
-    //         }
-    //         setItemsList(response)
-    //     } catch (error) {
-    //         console.log("listSearch: ", error);
-            
-    //     }
-    // }
-
-    //this wont work soon, because if the database receive some update, it wont be pass to the local database
-    // async function checksLocalDatabase() {
-    //     const response = await localDatabase.getAllLocalData()
-    //     if (response[0] == undefined){
-    //         item.listItems()
-    //             .then(async (response) => {
-    //                 localDatabase.storeDataLocally(response)                    
-    //                 setItemsList(await localDatabase.getAllLocalData())
-    //             });
-    //             console.log("Cloud loaded");
-    //         return false
-    //     } else {
-    //         setItemsList(response)
-    //         return true
-    //     }
-    // }
-
-    const  handleRefresh = async () => {
+    async function loadDataFromDatabase() {
+        try {
+            setColumn('description')
+            setSorter("")
+            setSearch("")
+            item.getItemsListFromDatabase()
+                .then((response) => {
+                    setItemsList(response.items)
+                })
+            router.reload()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+  
+    const handleRefresh = async () => {
         setRefresh(true)
-        // const response = await localDatabase.getAllLocalData()
-        // setItemsList(response)
+
         setRefresh(false)
     }
     
     useEffect(() => {
-        item.getItemsListFromDatabase()
-        .then((response) => {
-            setItemsList(response.items)
-        })
+        loadDataFromDatabase()
     }, []);   
 
-    useEffect(() =>{
-        // item.filter(filter, search)
-        // .then((response) => {
-        //     // setItemsList(response)
-        // })
+    useEffect(() => {
+        item.filter(column, search, sorter)
+        .then((response) => {
+            setItemsList(response.filterResult)
+        })
     },[search, sorter])
 
     return (
@@ -79,17 +56,9 @@ export default function Items() {
                         placeholder="Search..."
                         placeholderTextColor="#555"
                         onChangeText={setSearch}
-
+                        value={search}
                     />
-                    <Pressable style={styles.searchIconContainer} onPress={() => {
-                        item.filter(filter, search)
-                        .then((response) => {
-                            setItemsList(response)
-                                }
-                            )}
-                        }>
                         <Feather name="search" size={24} color="#2295BB" />
-                    </Pressable>
                 </View>
             </View>
             <View style={styles.filters}>
@@ -100,14 +69,18 @@ export default function Items() {
                     { label: 'Localização', value: 'location' },
                 ]}
                 label={"Filtros"}
-                onSendValue={setFilter}/>
+                onSendValue= {setColumn}
+                />
                 <DropdownComponent 
                 filters={[
-                    { label: 'Ordem Crescente', value: 'OC' },
-                    { label: 'Ordem Decrescente', value: 'OD' },
+                    { label: 'Ordem Crescente', value: 'ASC' },
+                    { label: 'Ordem Decrescente', value: 'DESC' },
                 ]}
                 label={"Ordenar"}
                 onSendValue={setSorter}/>
+                <Pressable onPress={() => loadDataFromDatabase()} style={styles.cleanFilter}> 
+                    <Text style={{textAlign:"center", color:"white", fontFamily:"Roboto-Bold", fontSize: 12}}>Limpar Filtros</Text>
+                </Pressable>
             </View>
             {/* FlatList with Table Layout */}
             <View style={styles.productContainer}>
@@ -175,6 +148,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderTopLeftRadius: 10,
         borderBottomLeftRadius: 10,
+    },
+    cleanFilter: {
+        backgroundColor:"#F5B236",
+        height: 30,
+        width:120,
+        borderRadius: 10,
+        paddingHorizontal: 8,
+        marginHorizontal:20,
+        elevation: 3,
+        shadowColor: "black",
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        justifyContent:"center",
     },
     searchInput: {
         flex: 1,

@@ -265,7 +265,11 @@ server.get('/all-free-locations', async (request, reply) => {
 
 server.get('/filter', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    const { column, filter } = request.query;
+    const { column, filter, sorter } = request.query;
+    let sqlSorter;
+    if(!sorter){
+        sqlSorter = `ORDER BY ${sorter}`
+    }
 
     // Validate column name to prevent SQL injection
     const validColumns = ['code', 'description', 'partnumber', 'location'];
@@ -279,7 +283,8 @@ server.get('/filter', async (request, reply) => {
             RIGHT JOIN item_location il
             ON i.location = il.location
             WHERE i.${column} LIKE $1
-        `, [filter + "%"]);
+            ${sqlSorter}
+        `, [filter]);
 
         return reply.status(200).send({
             message: "Filter has been applied!",
