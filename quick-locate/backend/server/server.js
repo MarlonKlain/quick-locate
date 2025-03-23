@@ -271,7 +271,7 @@ server.get('/filter', async (request, reply) => {
         const filterResult = await sql`
         SELECT * FROM item i
         RIGHT JOIN item_location il
-        ON i.location = il.item_location
+        ON i.location = il.location
         WHERE ${"i." + column} LIKE ${filter + "%"}
         `
         return reply.status(200).send({message: "Filter been aplied!", filterResult})

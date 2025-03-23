@@ -63,7 +63,10 @@ export default function Items() {
     }, []);   
 
     useEffect(() =>{
-        item.filter(filter, search)
+        // item.filter(filter, search)
+        // .then((response) => {
+        //     // setItemsList(response)
+        // })
     },[search, sorter])
 
     return (
@@ -78,7 +81,13 @@ export default function Items() {
                         onChangeText={setSearch}
 
                     />
-                    <Pressable style={styles.searchIconContainer}>
+                    <Pressable style={styles.searchIconContainer} onPress={() => {
+                        item.filter(filter, search)
+                        .then((response) => {
+                            setItemsList(response.filterResult)
+                                }
+                            )}
+                        }>
                         <Feather name="search" size={24} color="#2295BB" />
                     </Pressable>
                 </View>
