@@ -56,7 +56,7 @@ const data = [
         width:120,
         borderRadius: 10,
         paddingHorizontal: 8,
-        marginHorizontal:20,
+        marginHorizontal:5,
         elevation: 3,
         shadowColor: "black",
         shadowOpacity: 0.1,

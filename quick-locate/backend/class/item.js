@@ -52,7 +52,7 @@ export class Item {
         }
     }
 
-    async filter(column, filter){
+    async filter(column, filter, sorter){
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
                 method: "GET",
@@ -61,20 +61,20 @@ export class Item {
                 }
             })
             const result = await response.json()
-            // if(sorter == "ASC"){
-            //     const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
-            //     console.log(resultSorted);
+            if(sorter == "ASC"){
+                console.log(column);
                 
-            //     return resultSorted
-            // } else if(sorter == "DESC"){
-            //     const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> b-a)
-            //     console.log(resultSorted);
-            //     return resultSorted
-            // } else {
-            //     console.log(result);
-            //     return result
-            // }
-            return result
+                result.filterResult.sort((a, b ) => a[column] - b[column])
+                console.log("ASC:", result);
+                return result
+            } else if(sorter == "DESC"){
+                result.filterResult.sort((a, b ) => b[column] - a[column])
+                console.log("DESC:", result);
+                return result
+            } else {
+                console.log("Not sorted:", result);
+                return result
+            }
         } catch (error) {
             console.log(error)
         }

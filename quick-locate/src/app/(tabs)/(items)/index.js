@@ -23,7 +23,6 @@ export default function Items() {
                 .then((response) => {
                     setItemsList(response.items)
                 })
-            router.reload()
         } catch (error) {
             console.log(error)
         }
@@ -40,13 +39,14 @@ export default function Items() {
     }, []);   
 
     useEffect(() => {
-        item.filter(column, search)
-        .then((response) => {
-            if(!response.filterResult){
-                setItemsList(response.filterResult)
-            }
-        })
-    },[search, column])
+        if(search){
+            item.filter(column, search, sorter)
+            .then((response) => {
+                    setItemsList(response.filterResult)
+            })
+        }
+        
+    },[search, column, sorter])
 
     return (
         <View style={styles.container}>
