@@ -52,7 +52,7 @@ export class Item {
         }
     }
 
-    async filter(column, filter, sorter){
+    async filter(column, filter){
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
                 method: "GET",
@@ -66,15 +66,15 @@ export class Item {
                 const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
                 console.log(resultSorted);
                 
-                // return resultSorted
+                return resultSorted
             } else if(sorter == "DESC"){
                 const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> b-a)
                 console.log(resultSorted);
                 
-                // return resultSorted
+                return resultSorted
             } else {
                 console.log(result);
-                // return result
+                return result
             }
         } catch (error) {
             console.log(error)

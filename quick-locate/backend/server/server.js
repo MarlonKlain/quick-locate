@@ -265,7 +265,7 @@ server.get('/all-free-locations', async (request, reply) => {
 
 server.get('/filter', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    const { column, filter } = request.query;
+    const { column, filter} = request.query;
 
     // Validate column name to prevent SQL injection
     const validColumns = ['code', 'description', 'partnumber', 'location'];

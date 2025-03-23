@@ -40,9 +40,11 @@ export default function Items() {
     }, []);   
 
     useEffect(() => {
-        item.filter(column, search, sorter)
+        item.filter(column, search)
         .then((response) => {
-            setItemsList(response.filterResult)
+            if(!response.filterResult){
+                setItemsList(response.filterResult)
+            }
         })
     },[search, sorter])
 
