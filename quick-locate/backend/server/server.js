@@ -268,7 +268,7 @@ server.get('/filter', async (request, reply) => {
     const { column, filter } = request.query;
 
     // Validate column name to prevent SQL injection
-    const validColumns = ['name', 'description', 'category']; // Add valid column names
+    const validColumns = ['code', 'description', 'partnumber', 'location'];
     if (!validColumns.includes(column)) {
         return reply.status(400).send({ message: "Invalid column name" });
     }
