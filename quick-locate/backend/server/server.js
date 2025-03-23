@@ -148,7 +148,7 @@ server.get('/items', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
 })
-
+// arrumar isso aqui v
 server.get('/items/:code', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const code = request.query.code;
@@ -293,3 +293,18 @@ server.get('/filter', async (request, reply) => {
         });
     }
 });
+
+server.put('/delete-free-location', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL);
+    const location = request.body
+    
+    try {
+        await sql`
+        DELETE FROM item_location
+        WHERE location = ${location}
+        `
+        return reply.status(200).send({message: "Location deleted!"})
+    } catch (error) {
+        return reply.status(400).send({message: "Location not deleted, something went wrong!", error:error.message})
+    }
+})

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import {FontAwesome} from "@expo/vector-icons"
 import { Item } from '../../../../backend/class/item';
 import { Locations } from '../../../../backend/class/locations';
+import BackButton from '../../../components/back-button';
 
 export default function itemDetails() {
   const [code, setCode] = useState();
@@ -63,6 +64,7 @@ export default function itemDetails() {
         </View>
       </Modal>
       <View style={styles.infoContainer}>
+        <BackButton />
         <Text style={styles.label}>Code</Text>
         <TextInput style={styles.input} value={code} editable={false} />
       </View>

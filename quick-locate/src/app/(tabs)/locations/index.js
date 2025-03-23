@@ -7,8 +7,6 @@ import { router } from "expo-router";
 
 export default function Items() {
     const [locationsList, setLocationsList] = useState();
-    const [isModalVisible, setModalVisible] = useState(false)
-    const [newLocation, setNewLocation] = useState()
     const locations = new Locations();
 
 
@@ -25,45 +23,13 @@ export default function Items() {
         .then((response) => {
             setLocationsList(response.locations)
         })
-    }, [isModalVisible])
+    }, [])
 
     return (
         <View style={styles.container}>
-            {/* <View style={styles.searchBarContainer}>
-                <View style={styles.searchBar}>
-                    <TextInput style={styles.searchInput} placeholder="Search..." placeholderTextColor="#555" />
-                    <View style={styles.searchIconContainer}>
-                        <Feather name="search" size={24} color="#2295BB" />
-                    </View>
-                </View>
-            </View> */}
-            {/* <View style={styles.addLocationContainer}>
-                <Pressable style={styles.AddLocationButton} onPress={() => setModalVisible(true)}>
-                    <Text style={styles.addButtonText}>Endereços Livres</Text>
-                </Pressable>
-            </View> */}
-            <Modal
-            visible={isModalVisible}
-            onRequestClose={() => setModalVisible(false)}
-            animationType="fade"
-            presentationStyle="pageSheet">
-                <View style={styles.modalAddLocation}>
-                    <Text style={styles.modalTextAddLocation}>Insira a nova localização</Text>
-                    <TextInput style={styles.modalTextInput}
-                    onChangeText={setNewLocation}></TextInput>
-                    <View style={{flexDirection:"row"}}>
-                        <Pressable style={{...styles.modalButtons, marginRight:15}} onPress={async () => {await APIlocations.registerNewLocation(newLocation); setModalVisible(false)}}>
-                            <Text>Confirm</Text>
-                        </Pressable>
-                        <Pressable style={styles.modalButtons} onPress={() => setModalVisible(false)}>
-                            <Text>Cancel</Text>
-                        </Pressable>
-                    </View>
-                </View>
-            </Modal>
             <View style={styles.productContainer}>
                 <View style={styles.locationsTitleTextContainer}>
-                    <Text style={styles.locationsTitleText}>Locations</Text>
+                    <Text style={styles.locationsTitleText}>Localizações</Text>
                 </View>
                 <FlatList
                     data={locationsList}
@@ -88,6 +54,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: "#f5f5f5",
         alignItems: "center",
+        paddingHorizontal:20,
     },
     searchBarContainer: {
         flex: 0.1,
@@ -148,10 +115,12 @@ const styles = StyleSheet.create({
         textAlign: "center",
         fontSize: 24,
         paddingVertical: 10,
+        fontFamily:"Roboto-Bold",
+        borderRadius: 12,
     },
     locationsTitleTextContainer: {
         width: "100%",
-        marginVertical: 10,
+        marginBottom:10,
     },
     row: {
         justifyContent: "space-between",
@@ -159,7 +128,7 @@ const styles = StyleSheet.create({
     card: {
         width:170,
         backgroundColor: "white",
-        marginHorizontal:10,
+        marginTop:5,
         marginVertical:5,
         padding: 20,
         borderRadius: 12,

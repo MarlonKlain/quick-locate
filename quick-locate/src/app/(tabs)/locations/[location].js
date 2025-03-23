@@ -4,6 +4,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 // import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
 import { FlatList } from "react-native";
 import { Locations } from "../../../../backend/class/locations";
+import BackButton from "../../../components/back-button";
 
 
 export default function ScreenItemsByLocation(){
@@ -17,12 +18,13 @@ export default function ScreenItemsByLocation(){
       console.log(response)
       setItemsByLocation(response.itemsByLocation)
     })
-    
   }, [location])
 
+  
 
   return(
     <View style={styles.container}>
+      <BackButton />
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Lista de items da localização:</Text>
         <Text style={styles.headerText}>{location}</Text>
@@ -43,7 +45,9 @@ export default function ScreenItemsByLocation(){
                 {item.code ? (
                     <Text style={styles.cell}>{item.code}</Text>
                 ) : (
+                  <Pressable onPress={() => itemByLocationList.deleteFreeLocation(item.location)}>
                     <View style={styles.freeLocation} />
+                  </Pressable>
                 )}
                 <Text style={styles.cell}>{item.partnumber}</Text>
                 <Text style={styles.cell}>{item.description}</Text>
@@ -79,17 +83,18 @@ const styles = StyleSheet.create({
   itemsListHeaderContainer:{
     backgroundColor:"#2295BB",
     flexDirection:"row",
-    width:"100%",
     justifyContent:"center",
     borderRadius:5,
-    padding:5
+    padding:5,
+    width:"100%"
   },
   itemsListHeaderText:{
+    width:"25%",
     color:"white",
     fontFamily:"Roboto-Bold",
-    paddingHorizontal:10,
-    paddingVertical:5,
-    fontSize:15
+    paddingVertical:10,
+    fontSize:15,
+    textAlign:"center"
   },
   row:{
     flexDirection: "row",

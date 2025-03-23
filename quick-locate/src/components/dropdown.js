@@ -53,10 +53,10 @@ const data = [
     dropdown: {
         backgroundColor:"#F5B236",
         height: 30,
-        width:120,
+        width:110,
         borderRadius: 10,
         paddingHorizontal: 8,
-        marginHorizontal:5,
+        marginHorizontal:8,
         elevation: 3,
         shadowColor: "black",
         shadowOpacity: 0.1,
