@@ -11,18 +11,17 @@ import multer from "multer";
 const upload = multer({dest: 'uploads/'})
 
 const server = fastify()
+dotenv.config()
 
 server.register(cors, {
     origin: "*", // Allows all origins
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 });
-dotenv.config()
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     
     console.log(`Server running!`);
 });
-
 
 server.post('/register', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
@@ -145,6 +144,7 @@ server.get('/items', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
 })
+
 server.get('/items/:code', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const code = request.query.code;
@@ -158,6 +158,7 @@ server.get('/items/:code', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
 })
+
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
@@ -169,6 +170,22 @@ server.get('/locations', async (request, reply) => {
         return reply.status(200).send({messsage: "All locations returned", locations})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the locations", error: error.message});
+    }
+})
+
+server.get('/locations/:location', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL)
+    const location = request.query.location
+    try {
+        const itemsByLocation = await sql`
+        SELECT * FROM item i
+        RIGHT JOIN item_location il
+        ON i.location = il.location
+        WHERE il.location LIKE '${location}%'    
+        `
+        return reply.status(200).send({message: "All items of the select location were returned", itemsByLocation})
+    } catch (error) {
+        return reply.status(400).send({message: "Something went wrong tryng to get the items of the select location", error: error.message })
     }
 })
 

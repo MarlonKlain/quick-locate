@@ -3,28 +3,22 @@ import { useEffect, useState } from "react"
 import { View, Text, Pressable, StyleSheet } from "react-native";
 // import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
 import { FlatList } from "react-native";
+import { Locations } from "../../../../backend/class/locations";
 
 
 export default function ScreenItemsByLocation(){
   const [itemsByLocation, setItemsByLocation] = useState();
   const { location } = useLocalSearchParams();
-  // const localDatabase = useLocalDatabase();
+  const itemByLocationList = new Locations();
+  
 
   useEffect(() => {
-    // localDatabase.getAllItemsByLocation(location)
-    // .then((response) => {
-    //   setItemsByLocation(response)
-    //   // console.log(response);
+    itemByLocationList.getLocations(location)
+    .then((response) => {
+      console.log(response);
       
-    // })
+    })
   }, [location])
-
-  // if (itemsByLocation) {
-  //   console.log("Loaded: ", itemsByLocation)
-
-  // } else {
-  //   console.log("Not Loaded!: ", itemsByLocation)
-  // }
 
   return(
     <View style={styles.container}>

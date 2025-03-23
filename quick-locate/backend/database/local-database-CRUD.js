@@ -73,9 +73,7 @@ export function useLocalDatabase(){
                 ON i.location = il.location
                 WHERE i.${column} like ?
             `
-          const response = await database.getAllAsync(query, `%${name}%`)
-        //   console.log("Filter: " ,response);
-          
+          const response = await database.getAllAsync(query, `%${name}%`)          
           return response
       } catch (error) {
           console.log("filter: ", error)
@@ -137,7 +135,7 @@ export function useLocalDatabase(){
             const query = `
             SELECT DISTINCT SUBSTR(location, 1, 1) AS first_caracter
             FROM item
-            ORDER BY first_caracter
+            ORDER BY first_character
             `
             const response = await database.getAllAsync(query)
             return response

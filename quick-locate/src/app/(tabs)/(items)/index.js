@@ -56,18 +56,10 @@ export default function Items() {
     }
     
     useEffect(() => {
-    //    checksLocalDatabase();
-
-    //    localDatabase.getAllFreeLocations()
-    //    .then((response) => console.log(response))
-
-    //    localDatabase.getAllLocalDataLocation()
-    //    .then((response) => {
-    //     // console.log("Locations: ", response)       
-    // })
-    console.log("Aqui");
         item.getItemsListFromDatabase()
-        .then((response) => {console.log(response); setItemsList(response.items)})
+        .then((response) => {
+            setItemsList(response.items)
+        })
     }, []);   
 
     useEffect(() =>{

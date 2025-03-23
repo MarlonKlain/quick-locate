@@ -1,9 +1,7 @@
 import { View, TextInput, Pressable, StyleSheet, Text, FlatList, Modal, Alert} from "react-native";
-import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Locations } from "../../../../backend/class/locations"
 import { router } from "expo-router";
-import { Item } from "../../../../backend/class/item";
 
 
 
@@ -23,9 +21,9 @@ export default function Items() {
       };
     
     useEffect(()=>{
-        locations.getAllLocations()
+        locations.getLocations()
         .then((response) => {
-            
+            setLocationsList(response.locations)
         })
     }, [isModalVisible])
 
@@ -70,13 +68,13 @@ export default function Items() {
                 <FlatList
                     data={locationsList}
                     renderItem={({ item }) => (
-                        <Pressable onLongPress={() => deleteLocation(item.first_caracter)} onPress={() => router.push(`./locations/${item.first_caracter}`)}>
+                        <Pressable onLongPress={() => deleteLocation(item.first_character)} onPress={() => router.push(`./locations/${item.first_caracter}`)}>
                             <View style={styles.card}>
-                                <Text style={styles.cardText}>{item.first_caracter}</Text>
+                                <Text style={styles.cardText}>{item.first_character}</Text>
                             </View>
                         </Pressable>
                     )}
-                    keyExtractor={(item) => item.first_caracter}
+                    keyExtractor={(item) => item.first_character}
                     numColumns={2}
                     columnWrapperStyle={styles.row}
                 />
