@@ -268,7 +268,7 @@ server.get('/filter', async (request, reply) => {
     const { column, filter, sorter } = request.query;
     let sqlSorter;
     if(!sorter){
-        sqlSorter = `ORDER BY ${sorter}`
+        sqlSorter = `ORDER BY ${sorter};`
     }
 
     // Validate column name to prevent SQL injection
@@ -283,7 +283,6 @@ server.get('/filter', async (request, reply) => {
             RIGHT JOIN item_location il
             ON i.location = il.location
             WHERE i.${column} LIKE $1
-            ${sqlSorter}
         `, [filter]);
 
         return reply.status(200).send({

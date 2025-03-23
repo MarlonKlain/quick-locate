@@ -52,7 +52,7 @@ export class Item {
         }
     }
 
-    async filter(column, filter, sorter){
+    async filter(column, filter, sorter = "ASC"){
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}&sorter=${sorter}`, {
                 method: "GET",
