@@ -1,3 +1,5 @@
+import { Alert } from "react-native";
+
 export class Locations {
 
     async getAllFreeLocations(){
@@ -51,7 +53,11 @@ export class Locations {
         }
     }
 
-    async deleteFreeLocation(location){
+    async deleteFreeLocation(code, location){
+        if(code){
+            console.log("Remova todos os itens endereçados nessa localização antes de exclui-la!")
+        }
+
         const data = [
             location,
         ]
@@ -65,6 +71,7 @@ export class Locations {
                 body: JSON.stringify(data)
             })
             const result = await response.json()
+            console.log(result);
             return result
         } catch (error) {
             console.log(error);

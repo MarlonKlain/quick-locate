@@ -18,6 +18,7 @@ export default function ScreenItemsByLocation(){
       console.log(response)
       setItemsByLocation(response.itemsByLocation)
     })
+    
   }, [location])
 
   
@@ -40,14 +41,13 @@ export default function ScreenItemsByLocation(){
           <FlatList
           data={itemsByLocation}
           renderItem={({item}) => (
-            <Pressable>
+            <Pressable onLongPress={() => {itemByLocationList.deleteFreeLocation(item.code, item.location), console.log("Aqui");
+            }}>
               <View style={styles.row}>
                 {item.code ? (
                     <Text style={styles.cell}>{item.code}</Text>
                 ) : (
-                  <Pressable onPress={() => itemByLocationList.deleteFreeLocation(item.location)}>
                     <View style={styles.freeLocation} />
-                  </Pressable>
                 )}
                 <Text style={styles.cell}>{item.partnumber}</Text>
                 <Text style={styles.cell}>{item.description}</Text>
@@ -65,7 +65,8 @@ export default function ScreenItemsByLocation(){
 const styles = StyleSheet.create({
   container:{
     flex:1,
-    paddingHorizontal:20
+    paddingHorizontal:20,
+    paddingVertical:10,
   },
   headerContainer:{
     flex:0.15,

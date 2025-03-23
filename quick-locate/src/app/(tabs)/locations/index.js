@@ -41,7 +41,7 @@ export default function Items() {
                         </Pressable>
                     )}
                     keyExtractor={(item) => item.first_character}
-                    numColumns={4}
+                    numColumns={2}
                     columnWrapperStyle={styles.row}
                 />
             </View>
@@ -51,10 +51,11 @@ export default function Items() {
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop:10,
         flex: 1,
         backgroundColor: "#f5f5f5",
         alignItems: "center",
-        paddingHorizontal:20,
+        paddingHorizontal:10,
     },
     searchBarContainer: {
         flex: 0.1,
