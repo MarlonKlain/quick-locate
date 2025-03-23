@@ -263,7 +263,7 @@ server.get('/all-free-locations', async (request, reply) => {
     }
 })
 
-server.get('/filter?column&filter', async (request, reply) => {
+server.get('/filter', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     const filter = request.query.filter
     const column = request.query.column

@@ -16,20 +16,20 @@ export default function Items() {
     let item = new Item();
     
 
-    async function listSearch(name, column) {
-        // try {
-        //     const response = await localDatabase.filter(name, column)
-        //     if (sorter == "OC"){
-        //         response.sort((a, b) => a[column] - b[column])
-        //     } else if (sorter ==  "OD"){
-        //         response.sort((a, b) => b[column] - a[column])
-        //     }
-        //     setItemsList(response)
-        // } catch (error) {
-        //     console.log("listSearch: ", error);
+    // async function listSearch(name, column) {
+    //     try {
+    //         const response = await localDatabase.filter(name, column)
+    //         if (sorter == "OC"){
+    //             response.sort((a, b) => a[column] - b[column])
+    //         } else if (sorter ==  "OD"){
+    //             response.sort((a, b) => b[column] - a[column])
+    //         }
+    //         setItemsList(response)
+    //     } catch (error) {
+    //         console.log("listSearch: ", error);
             
-        // }
-    }
+    //     }
+    // }
 
     //this wont work soon, because if the database receive some update, it wont be pass to the local database
     // async function checksLocalDatabase() {
@@ -63,7 +63,7 @@ export default function Items() {
     }, []);   
 
     useEffect(() =>{
-        listSearch(search, filter)
+        item.filter(filter, search)
     },[search, sorter])
 
     return (
