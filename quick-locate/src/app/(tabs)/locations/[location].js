@@ -14,8 +14,10 @@ export default function ScreenItemsByLocation(){
   useEffect(() => {
     itemByLocationList.getLocations(location).
     then((response) => {
-      console.log(response);
+      console.log(response)
+      setItemsByLocation(response.itemsByLocation)
     })
+    
   }, [location])
 
 
@@ -32,19 +34,21 @@ export default function ScreenItemsByLocation(){
           <Text style={styles.itemsListHeaderText}>Descrição</Text>
           <Text style={styles.itemsListHeaderText}>Localização</Text>
         </View>
-        <FlatList
-        data={itemsByLocation}
-        renderItem={({item}) => (
-          <Pressable>
-            <View style={styles.row}>
-              <Text style={styles.cell}>{item.code}</Text>
-              <Text style={styles.cell}>{item.partnumber}</Text>
-              <Text style={styles.cell}>{item.description}</Text>
-              <Text style={styles.cell}>{item.location}</Text>
-            </View>
-          </Pressable>
-        )}
-        />
+        <View style={{flex:1, width:"100%"}}>
+          <FlatList
+          data={itemsByLocation}
+          renderItem={({item}) => (
+            <Pressable>
+              <View style={styles.row}>
+                <Text style={styles.cell}>{item.code}</Text>
+                <Text style={styles.cell}>{item.partnumber}</Text>
+                <Text style={styles.cell}>{item.description}</Text>
+                <Text style={styles.cell}>{item.location}</Text>
+              </View>
+            </Pressable>
+          )}
+          />
+        </View>
       </View>
     </View>
   )
@@ -87,8 +91,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
-    paddingVertical: 10,
-    alignItems:"center"
+    paddingVertical: 20,
+    alignItems:"center",
   },
   cell:{
     width:"25%",

@@ -138,7 +138,11 @@ server.get('/import', async (request, reply) => {
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
-        const items = await sql`SELECT * FROM item`
+        const items = await sql`
+        SELECT * FROM item i
+        RIGHT JOIN item_location il
+        ON i.location = il.location;
+        `
         return reply.status(200).send({messsage: "All products returned", items})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
