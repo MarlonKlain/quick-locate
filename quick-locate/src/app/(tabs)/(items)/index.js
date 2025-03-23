@@ -84,7 +84,7 @@ export default function Items() {
                     <Pressable style={styles.searchIconContainer} onPress={() => {
                         item.filter(filter, search)
                         .then((response) => {
-                            setItemsList(response.filterResult)
+                            setItemsList(response)
                                 }
                             )}
                         }>
