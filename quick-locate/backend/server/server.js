@@ -264,18 +264,31 @@ server.get('/all-free-locations', async (request, reply) => {
 })
 
 server.get('/filter', async (request, reply) => {
-    const sql = neon(process.env.DATABASE_URL)
-    const filter = request.query.filter
-    const column = request.query.column
+    const sql = neon(process.env.DATABASE_URL);
+    const { column, filter } = request.query;
+
+    // Validate column name to prevent SQL injection
+    const validColumns = ['name', 'description', 'category']; // Add valid column names
+    if (!validColumns.includes(column)) {
+        return reply.status(400).send({ message: "Invalid column name" });
+    }
+
     try {
         const filterResult = await sql`
         SELECT * FROM item i
         RIGHT JOIN item_location il
         ON i.location = il.location
-        WHERE i.${column} LIKE ${filter + "%"}
+        WHERE i.${sql(column)} LIKE ${filter + "%"}
         `;
-        return reply.status(200).send({message: "Filter been aplied!", filterResult})
+
+        return reply.status(200).send({
+            message: "Filter has been applied!",
+            filterResult
+        });
     } catch (error) {
-        return reply.status(400).send({message: "Filter was not aplied!", error:error.message})
+        return reply.status(400).send({
+            message: "Filter was not applied!",
+            error: error.message
+        });
     }
-})
+});
