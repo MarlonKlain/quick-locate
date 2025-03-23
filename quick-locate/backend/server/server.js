@@ -274,12 +274,12 @@ server.get('/filter', async (request, reply) => {
     }
 
     try {
-        const filterResult = await sql`
-        SELECT * FROM item i
-        RIGHT JOIN item_location il
-        ON i.location = il.location
-        WHERE i.${sql(column)} LIKE ${filter + "%"}
-        `;
+        const filterResult = await sql(`
+            SELECT * FROM item i
+            RIGHT JOIN item_location il
+            ON i.location = il.location
+            WHERE i.${column} LIKE $1
+        `, [filter + "%"]);
 
         return reply.status(200).send({
             message: "Filter has been applied!",
