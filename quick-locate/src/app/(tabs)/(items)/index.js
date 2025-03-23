@@ -46,7 +46,7 @@ export default function Items() {
                 setItemsList(response.filterResult)
             }
         })
-    },[search, sorter])
+    },[search, column])
 
     return (
         <View style={styles.container}>

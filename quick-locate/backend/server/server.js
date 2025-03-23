@@ -269,7 +269,7 @@ server.get('/filter', async (request, reply) => {
     const column = request.query.column; // Ensure this is a valid column name
 
     // Validate column name to prevent SQL injection
-    const allowedColumns = ['name', 'description', 'location']; // Add valid columns here
+    const allowedColumns = ['code', 'partnumber', 'description', 'location']; // Add valid columns here
     if (!allowedColumns.includes(column)) {
         return reply.status(400).send({ message: "Invalid column name" });
     }

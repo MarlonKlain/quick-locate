@@ -61,7 +61,6 @@ export class Item {
                 }
             })
             const result = await response.json()
-            console.log(result.filterResult);
             // if(sorter == "ASC"){
             //     const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
             //     console.log(resultSorted);
