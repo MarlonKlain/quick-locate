@@ -62,20 +62,20 @@ export class Item {
             })
             const result = await response.json()
             console.log(result.filterResult);
-            if(sorter == "ASC"){
-                const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
-                console.log(resultSorted);
+            // if(sorter == "ASC"){
+            //     const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> a-b)
+            //     console.log(resultSorted);
                 
-                return resultSorted
-            } else if(sorter == "DESC"){
-                const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> b-a)
-                console.log(resultSorted);
-                
-                return resultSorted
-            } else {
-                console.log(result);
-                return result
-            }
+            //     return resultSorted
+            // } else if(sorter == "DESC"){
+            //     const resultSorted = result.filterResult.sort(({column:a}, {column:b})=> b-a)
+            //     console.log(resultSorted);
+            //     return resultSorted
+            // } else {
+            //     console.log(result);
+            //     return result
+            // }
+            return result
         } catch (error) {
             console.log(error)
         }

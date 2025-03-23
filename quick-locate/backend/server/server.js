@@ -265,11 +265,12 @@ server.get('/all-free-locations', async (request, reply) => {
 
 server.get('/filter', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    const { column, filter} = request.query;
+    const filter = request.query.filter;
+    const column = request.query.column; // Ensure this is a valid column name
 
     // Validate column name to prevent SQL injection
-    const validColumns = ['code', 'description', 'partnumber', 'location'];
-    if (!validColumns.includes(column)) {
+    const allowedColumns = ['name', 'description', 'location']; // Add valid columns here
+    if (!allowedColumns.includes(column)) {
         return reply.status(400).send({ message: "Invalid column name" });
     }
 
@@ -279,7 +280,7 @@ server.get('/filter', async (request, reply) => {
             RIGHT JOIN item_location il
             ON i.location = il.location
             WHERE i.${column} LIKE $1
-        `, [filter + "%"]);
+        `, [filter + "%"]); // Parameterized value
 
         return reply.status(200).send({
             message: "Filter has been applied!",
