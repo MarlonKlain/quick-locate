@@ -40,7 +40,11 @@ export default function ScreenItemsByLocation(){
           renderItem={({item}) => (
             <Pressable>
               <View style={styles.row}>
-                <Text style={styles.cell}>{item.code}</Text>
+                {item.code ? (
+                    <Text style={styles.cell}>{item.code}</Text>
+                ) : (
+                    <View style={styles.freeLocation} />
+                )}
                 <Text style={styles.cell}>{item.partnumber}</Text>
                 <Text style={styles.cell}>{item.description}</Text>
                 <Text style={styles.cell}>{item.location}</Text>
@@ -98,5 +102,14 @@ const styles = StyleSheet.create({
     width:"25%",
     textAlign: "center",
     fontFamily: 'Roboto-Regular',
-  }
+  },
+  freeLocation: {
+    flex:1,
+    width: 20,  
+    height: 20, 
+    backgroundColor: "green",
+    alignSelf: "center", 
+    borderRadius: 4, 
+    marginLeft:5
+},
 })

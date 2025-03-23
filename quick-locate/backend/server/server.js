@@ -262,3 +262,20 @@ server.get('/all-free-locations', async (request, reply) => {
         return reply.status(400).send({message: "Something went wrong searching for free locations", error: error.message})
     }
 })
+
+server.get('/filter?column&filter', async (request, reply) => {
+    const sql = neon(process.env.DATABASE_URL)
+    const filter = request.query.filter
+    const column = request.query.column
+    try {
+        const filterResult = await sql`
+        SELECT * FROM item i
+        RIGHT JOIN item_location il
+        ON i.location = il.item_location
+        WHERE i.${column} LIKE ${filter + "%"}
+        `
+        return reply.status(200).send({message: "Filter been aplied!", filterResult})
+    } catch (error) {
+        return reply.status(400).send({message: "Filter was not aplied!", error:error.message})
+    }
+})
