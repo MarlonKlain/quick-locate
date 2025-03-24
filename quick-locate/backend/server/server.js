@@ -99,7 +99,6 @@ server.post('/login', async (request, reply) => {
 });
 
 server.get('/import', async (request, reply) => {
-    // Create a validation that will check if the product already exists in the database
     const sql = neon(process.env.DATABASE_URL);
     
     
@@ -297,7 +296,6 @@ server.get('/filter', async (request, reply) => {
 server.put('/delete-free-location', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const location = request.body
-
     try {
         const deleteResponse = await sql`
         DELETE FROM item_location

@@ -58,17 +58,15 @@ export class Locations {
             console.log("Remova todos os itens endereçados nessa localização antes de exclui-la!")
         }
 
-        const data = [
-            location,
-        ]
-
+        console.log(data);
+        
         try {
             const response = await fetch("https://quick-locate.onrender.com/delete-free-location", {
                 method:"PUT",
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(location)
             })
             const result = await response.json()
             console.log(result);
