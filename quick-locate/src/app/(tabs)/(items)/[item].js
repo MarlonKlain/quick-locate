@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList} from 'react-native';
+import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 // import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ export default function itemDetails() {
   const [location, setLocation] = useState();
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
+  const [oldLocation, setOldLocation] = useState();
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
@@ -35,6 +36,7 @@ export default function itemDetails() {
         setPartnumber(element.partnumber)
         setDescription(element.description)
         setLocation(element.location)
+        setOldLocation(element.location)
       });
     })
   }, [])
@@ -90,7 +92,20 @@ export default function itemDetails() {
         <TextInput style={styles.input} editable={false} />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.confirmButton} onPress={() => itemsInfo.modifyLocation(code, location)}>
+        <Pressable style={styles.confirmButton} onPress={() => {
+          if(oldLocation != location){
+            Alert.alert(
+              `Deseja confirmar a atualização de endereço do item ${description}?`,
+              `Endereço antigo: ${oldLocation}.
+              Novo endereço: ${location}`, 
+              [ 
+                { text: "Cancelar", style: 'cancel'},
+                { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
+              ]);
+          } else {
+            Alert.alert("Insira uma localização diferente da antiga!")
+          }
+          }}>
           <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
         <Pressable style={styles.cancelButton} onPress={() => router.back()}>

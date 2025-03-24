@@ -21,7 +21,11 @@ export default function Items() {
             setSearch("")
             item.getItemsListFromDatabase()
                 .then((response) => {
-                    setItemsList(response.items)
+                    if (!response.items) {
+                        setItemsList(response.items)
+                    } else {
+                        console.log("Items not loaded yet!");  
+                    }
                 })
         } catch (error) {
             console.log(error)

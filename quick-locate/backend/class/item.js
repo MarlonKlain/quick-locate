@@ -6,8 +6,11 @@ export class Item {
                 const response = await fetch("https://quick-locate.onrender.com/items", {
                     method: "GET",
                     headers: {
-                        "Content-Type": "application/json"
-                    },
+                        "Access-Control-Allow-Headers" : "Content-Type",
+                        "Access-Control-Allow-Origin": "*",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
+                   },
                 });
                 const result = await response.json();
                 return result
@@ -38,6 +41,7 @@ export class Item {
 
         try {
             const response = await fetch("https://quick-locate.onrender.com/modify-location", {
+                mode: 'no-cors',
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -55,6 +59,7 @@ export class Item {
     async filter(column, filter, sorter){
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
+                mode: 'no-cors',
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"

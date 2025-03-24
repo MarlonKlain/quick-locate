@@ -100,12 +100,10 @@ server.post('/login', async (request, reply) => {
 
 server.get('/import', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    
-    
     let sheet = new ImportTtems();
-
     const itemsList = await sheet.storeData()
-    console.log(itemsList);
+
+
     try {
         await sql`BEGIN;`;
 
@@ -237,10 +235,16 @@ server.put('/modify-location', async(request, reply) =>{
             SET location = ${location}
             WHERE code = ${code}
             `;
+
+            await sql(`
+            INSERT INTO item_location_history (item_code, location)
+            VALUES ($1, $2)
+            `, [code, location]) 
         await sql`COMMIT;`;
 
         reply.status(200).send({message: "Location updated!"})
     } catch (error) {
+        await sql`ROLLBACK`
         reply.status(400).send({message: "Something went wrong when updating location", error: error.message})
     }
 
