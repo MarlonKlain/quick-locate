@@ -95,9 +95,9 @@ export default function itemDetails() {
         <Pressable style={styles.confirmButton} onPress={() => {
           if(oldLocation != location){
             Alert.alert(
-              `Deseja confirmar a atualização de endereço do item ${description}?`,
-              `Endereço antigo: ${oldLocation}.
-              Novo endereço: ${location}`, 
+              `Deseja confirmar a atualização de endereço do item: ${description}?`,
+              `Endereço antigo: ${oldLocation}
+Novo endereço: ${location}`, 
               [ 
                 { text: "Cancelar", style: 'cancel'},
                 { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}

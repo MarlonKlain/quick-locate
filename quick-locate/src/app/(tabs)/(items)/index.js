@@ -21,11 +21,7 @@ export default function Items() {
             setSearch("")
             item.getItemsListFromDatabase()
                 .then((response) => {
-                    if (!response.items) {
                         setItemsList(response.items)
-                    } else {
-                        console.log("Items not loaded yet!");  
-                    }
                 })
         } catch (error) {
             console.log(error)
@@ -34,7 +30,7 @@ export default function Items() {
   
     const handleRefresh = async () => {
         setRefresh(true)
-
+        loadDataFromDatabase()
         setRefresh(false)
     }
     
