@@ -154,7 +154,12 @@ server.get('/items/:code', async (request, reply) => {
         SELECT * FROM item 
         WHERE code = ${code}
         `
-        return reply.status(200).send({messsage: "All products returned", items})
+        const itemLocationHistory = await sql`
+        SELECT location, moved_at
+        FROM item_location_history
+        WHERE code = ${code}
+        `
+        return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
@@ -173,7 +178,7 @@ server.get('/locations', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the locations", error: error.message});
     }
 })
-
+//arrumar isso aqui v
 server.get('/locations/:location', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     const location = request.query.location;
@@ -310,3 +315,4 @@ server.put('/delete-free-location', async (request, reply) => {
         return reply.status(400).send({message: "Location not deleted, something went wrong!", error: error.message})
     }
 })
+
