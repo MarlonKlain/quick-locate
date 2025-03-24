@@ -157,7 +157,7 @@ server.get('/items/:code', async (request, reply) => {
         const itemLocationHistory = await sql`
         SELECT location, moved_at
         FROM item_location_history
-        WHERE code = ${code}
+        WHERE item_code = ${code}
         `
         return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
     } catch (error) {
