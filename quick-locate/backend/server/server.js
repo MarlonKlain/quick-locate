@@ -158,6 +158,7 @@ server.get('/items/:code', async (request, reply) => {
         SELECT location, moved_at
         FROM item_location_history
         WHERE item_code = ${code}
+        ORDER BY moved_at
         `
         return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
     } catch (error) {

@@ -15,6 +15,7 @@ export default function itemDetails() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
   const [oldLocation, setOldLocation] = useState();
+  const [locationHistory, setlocationHistory] = useState()
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
@@ -30,6 +31,7 @@ export default function itemDetails() {
  
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
+      setlocationHistory(response.itemLocationHistory)
       // console.log("Response: ", response);
       response.items.forEach(element => {
         setCode(element.code)
@@ -39,7 +41,16 @@ export default function itemDetails() {
         setOldLocation(element.location)
       });
     })
+
   }, [])
+
+  function formatTheHistory(timestamps) {
+    const timestampsSplited = timestamps.split("T")
+    const date = timestampsSplited[0]
+    const time = timestampsSplited[1].split(".")
+    const formatedTimeStamps = date + " " + time[0]
+    return formatedTimeStamps
+  }
 
   return (
     <View style={styles.container}>
@@ -90,6 +101,17 @@ export default function itemDetails() {
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Image</Text>
         <TextInput style={styles.input} editable={false} />
+      </View>
+      <View>
+        <FlatList 
+        data={locationHistory}
+        renderItem={({ item }) => (
+          <View style={{flex:1, flexDirection:'row', marginBottom:5}}>
+            <Text style={styles.locationHistory}>{item.location+":"}</Text>
+            <Text style={styles.dateTime}>{formatTheHistory(item.moved_at)}</Text>
+          </View>
+        )}
+        />
       </View>
       <View style={styles.buttonContainer}>
         <Pressable style={styles.confirmButton} onPress={() => {
@@ -177,5 +199,23 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     alignItems:"center",
     justifyContent:'center'
-},
+  },
+  locationHistory:{
+    fontSize:16,
+    marginRight:5,
+    fontFamily:"Roboto-Bold",
+    backgroundColor: "#fff",
+    padding:5,
+    width: "20%",
+    justifyContent:'center',
+    textAlign:'center',
+    borderRadius:5,
+    borderColor:"#ddd",
+    borderWidth:1,
+  },
+  dateTime:{
+    fontSize:14,
+    justifyContent:'center',
+    alignSelf:'center',
+  }
 });
