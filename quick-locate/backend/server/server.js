@@ -324,7 +324,7 @@ server.post("/upload", async (request, reply) => {
     try {
         const data = await request.file();
         console.log(data);
-        const uploadPath = path.join(process.cwd(), "uploads", data.filename);
+        const uploadPath = path.join(process.cwd(), "uploads", data.name);
 
         await new Promise((resolve, reject) => {
             const writeStream = fs.createWriteStream(uploadPath);
@@ -333,7 +333,7 @@ server.post("/upload", async (request, reply) => {
             writeStream.on("error", reject);
         });
 
-        reply.send({ message: "File uploaded successfully!", filename: data.filename });
+        reply.send({ message: "File uploaded successfully!", file: data.name });
     } catch (error) {
         console.error("Upload failed:", "Server:", error);
         reply.status(500).send({ error: "Failed to upload file" });

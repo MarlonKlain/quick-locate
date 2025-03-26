@@ -22,9 +22,6 @@ import { View, Text, Button} from 'react-native';
             const response = await fetch('https://quick-locate.onrender.com/upload', {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
             });
             console.log(response);
             const result = await response.json();
