@@ -1,3 +1,4 @@
+import multipart from "@fastify/multipart";
 import { fastify } from "fastify";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
@@ -7,19 +8,18 @@ import { ImportTtems } from "../class/import-items.js";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
-import multipart from "@fastify/multipart";
 
 //The folder where the uploads will be stored
-const upload = multer({dest: 'uploads/'})
+// const upload = multer({dest: 'uploads/'})
 
 const server = fastify()
+server.register(multipart)
 dotenv.config()
 
-server.register(multipart)
 server.register(cors, {
-        origin: "*", // Allows all origins
-        methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-    });
+    origin: "*", // Allows all origins
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+});
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     
@@ -324,7 +324,6 @@ server.post("/upload", async (request, reply) => {
     try {
         const data = await request.file();
         console.log(data);
-        
         const uploadPath = path.join(process.cwd(), "uploads", data.filename);
 
         await new Promise((resolve, reject) => {
@@ -336,7 +335,7 @@ server.post("/upload", async (request, reply) => {
 
         reply.send({ message: "File uploaded successfully!", filename: data.filename });
     } catch (error) {
-        console.error("Upload failed:", error);
+        console.error("Upload failed:", "Server:", error);
         reply.status(500).send({ error: "Failed to upload file" });
     }
 });
