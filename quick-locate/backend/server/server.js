@@ -321,7 +321,7 @@ server.put('/delete-free-location', async (request, reply) => {
 })
 
 server.post('/upload', async (req, reply) => {
-    const data = await req.file(); // Use request.file()
-    console.log('Received file:', data.filename);
+    const data = await req.file();
+    console.log('Received file:', data);
     reply.send({ message: 'File uploaded successfully!' });
 });
