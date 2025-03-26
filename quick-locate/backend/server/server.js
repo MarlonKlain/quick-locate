@@ -14,10 +14,13 @@ const upload = multer({dest: 'uploads/'})
 const server = fastify()
 dotenv.config()
 
-server.register(cors, {
-    origin: "*", // Allows all origins
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
-});
+server.register(
+    cors, {
+        origin: "*", // Allows all origins
+        methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    }, 
+    require('@fastify/multipart')
+);
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     
