@@ -7,6 +7,7 @@ import { ImportTtems } from "../class/import-items.js";
 import multer from "multer";
 import fs from "fs";
 import path from "path";
+import multipart from "@fastify/multipart";
 
 //The folder where the uploads will be stored
 const upload = multer({dest: 'uploads/'})
@@ -19,7 +20,7 @@ server.register(
         origin: "*", // Allows all origins
         methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     }, 
-    require('@fastify/multipart')
+    multipart,
 );
 
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
