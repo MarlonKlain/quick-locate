@@ -1,5 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import { FontAwesome6 } from "@expo/vector-icons"
+import PickUpFile from "../../components/fileUploader";
 
 export default function Import() {
     return(
@@ -8,6 +9,7 @@ export default function Import() {
                 <FontAwesome6 name="upload" color={"white"} size={200} />
                 <Text style={styles.importText}>Click on the icon to import the data</Text>
             </Pressable>
+            <PickUpFile />
         </View>
     )
 }

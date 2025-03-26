@@ -1,11 +1,12 @@
-import {fastify} from "fastify";
-import cors from "@fastify/cors"
+import { fastify } from "fastify";
+import cors from "@fastify/cors";
 import dotenv from "dotenv";
-import { neon } from '@neondatabase/serverless';
+import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
-import {ImportTtems} from "../class/import-items.js"
+import { ImportTtems } from "../class/import-items.js";
 import multer from "multer";
-
+import fs from "fs";
+import path from "path";
 
 //The folder where the uploads will be stored
 const upload = multer({dest: 'uploads/'})
@@ -317,3 +318,21 @@ server.put('/delete-free-location', async (request, reply) => {
     }
 })
 
+server.post("/upload", async (request, reply) => {
+    try {
+        const data = await request.file();
+        const uploadPath = path.join(process.cwd(), "uploads", data.filename);
+
+        await new Promise((resolve, reject) => {
+            const writeStream = fs.createWriteStream(uploadPath);
+            data.file.pipe(writeStream);
+            writeStream.on("finish", resolve);
+            writeStream.on("error", reject);
+        });
+
+        reply.send({ message: "File uploaded successfully!", filename: data.filename });
+    } catch (error) {
+        console.error("Upload failed:", error);
+        reply.status(500).send({ error: "Failed to upload file" });
+    }
+});
