@@ -321,7 +321,22 @@ server.put('/delete-free-location', async (request, reply) => {
 })
 
 server.post('/upload', async (req, reply) => {
-    const data = await req.file();
-    console.log('Received file:', data);
-    reply.send({ message: 'File uploaded successfully!' });
+    try {
+        const data = await req.file(); // Get the uploaded file
+
+        if (!data) {
+            return reply.status(400).send({ error: 'No file uploaded' });
+        }
+
+        console.log('Received file:', data.filename); // File name
+
+        // Save file to server (optional)
+        const uploadPath = path.join(__dirname, 'uploads', data.filename);
+        await pipeline(data.file, fs.createWriteStream(uploadPath));
+
+        reply.send({ message: 'File uploaded successfully', filename: data.filename });
+    } catch (error) {
+        console.error('Upload error:', error);
+        reply.status(500).send({ error: 'File upload failed' });
+    }
 });
