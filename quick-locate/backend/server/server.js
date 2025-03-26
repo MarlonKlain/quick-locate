@@ -320,22 +320,8 @@ server.put('/delete-free-location', async (request, reply) => {
     }
 })
 
-server.post("/upload", async (request, reply) => {
-    try {
-        const data = await request.file();
-        console.log("File server:", data);
-        const uploadPath = path.join(process.cwd(), "uploads", data.name);
-
-        await new Promise((resolve, reject) => {
-            const writeStream = fs.createWriteStream(uploadPath);
-            data.file.pipe(writeStream);
-            writeStream.on("finish", resolve);
-            writeStream.on("error", reject);
-        });
-
-        reply.send({ message: "File uploaded successfully!", file: data.name });
-    } catch (error) {
-        console.error("Upload failed:", "Server:", error);
-        reply.status(500).send({ error: "Failed to upload file" });
-    }
+server.post('/upload', async (req, reply) => {
+    const data = await req.file(); // Use request.file()
+    console.log('Received file:', data.filename);
+    reply.send({ message: 'File uploaded successfully!' });
 });

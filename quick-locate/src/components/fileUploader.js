@@ -1,38 +1,35 @@
 import { useState } from 'react';
 import * as DocumentPicker from 'expo-document-picker';
-import { View, Text, Button} from 'react-native';
+import { View, Button } from 'react-native';
 
-    export default function PickUpFile() {
-        async function getAndSendFile() {
+export default function PickUpFile() {
+    async function getAndSendFile() {
         try {
-            const file = await DocumentPicker.getDocumentAsync({}); // Allow any file type
-            console.log("File:", file);
-            
+            const file = await DocumentPicker.getDocumentAsync({});
             if (file.canceled) return;
-    
+            
             const formData = new FormData();
             formData.append('file', {
-                uri: file.assets[0].uri, // File URI
-                name: file.assets[0].name, // File name
-                type: file.assets[0].mimeType || 'application/octet-stream' // MIME type
+                uri: file.assets[0].uri,
+                name: file.assets[0].name,
+                type: file.assets[0].mimeType || 'application/octet-stream'
             });
-            
-            console.log("FormData:", formData);
-            
+
             const response = await fetch('https://quick-locate.onrender.com/upload', {
                 method: 'POST',
                 body: formData,
             });
-            console.log("Response:", response);
+
             const result = await response.json();
             console.log('Upload success:', result);
         } catch (error) {
             console.error('Upload failed:', error);
         }
     }
+
     return (
         <View>
-            <Button title='Upload File' onPress={() => getAndSendFile()}/>
+            <Button title='Upload File' onPress={() => getAndSendFile()} />
         </View>
-    )
+    );
 }
