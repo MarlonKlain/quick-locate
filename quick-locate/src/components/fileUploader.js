@@ -6,7 +6,7 @@ import { View, Text, Button} from 'react-native';
         async function getAndSendFile() {
         try {
             const file = await DocumentPicker.getDocumentAsync({}); // Allow any file type
-            console.log(file);
+            console.log("File:", file);
             
             if (file.canceled) return;
     
@@ -17,13 +17,13 @@ import { View, Text, Button} from 'react-native';
                 type: file.assets[0].mimeType || 'application/octet-stream' // MIME type
             });
             
-            console.log(formData);
+            console.log("FormData:", formData);
             
             const response = await fetch('https://quick-locate.onrender.com/upload', {
                 method: 'POST',
                 body: formData,
             });
-            console.log(response);
+            console.log("Response:", response);
             const result = await response.json();
             console.log('Upload success:', result);
         } catch (error) {

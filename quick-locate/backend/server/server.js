@@ -323,7 +323,7 @@ server.put('/delete-free-location', async (request, reply) => {
 server.post("/upload", async (request, reply) => {
     try {
         const data = await request.file();
-        console.log(data);
+        console.log("File server:", data);
         const uploadPath = path.join(process.cwd(), "uploads", data.name);
 
         await new Promise((resolve, reject) => {
