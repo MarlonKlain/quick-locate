@@ -1,14 +1,17 @@
+// The login page
+
 import { Link, router } from "expo-router";
 import { Text, TextInput, View, Pressable, StyleSheet, Alert } from "react-native";
 import { useState } from "react";
 import { User } from "../../../backend/class/user";
 
 export default function Login() {
+    //Hooks that will be used to received the user's information
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
-    const [isLoggedIn, setIsLoggedIn] = useState();
 
     return (
+        
         <View style={styles.container}>
             <View style={styles.welcomeContainer}>
                 <Text style={styles.welcomeText}>Welcome</Text>
@@ -60,7 +63,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
     container:{
-        flex:1
+        flex:1,
     },
     welcomeContainer:{
         flex:0.19,

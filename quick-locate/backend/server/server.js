@@ -1,11 +1,10 @@
-import multipart from "@fastify/multipart";
 import { fastify } from "fastify";
+import multipart from "@fastify/multipart";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
 import { ImportTtems } from "../class/import-items.js";
-import multer from "multer";
 import fs from "fs";
 import path from "path";
 
@@ -52,11 +51,11 @@ server.post('/register', async (request, reply) => {
 
     try {
         const [user] = await sql `
-        INSERT INTO user_profile (
-        user_first_name, 
-        user_last_name, 
-        user_username, 
-        user_email, 
+        INSERT INTO users(
+        first_name,
+        last_name,
+        username,
+        email,
         user_password
         )
         VALUES (
@@ -86,8 +85,8 @@ server.post('/login', async (request, reply) => {
     
     try {
         const [user] = await sql`
-            SELECT * FROM user_profile
-            WHERE user_username = ${username}
+            SELECT * FROM users
+            WHERE username = ${username}
         `
         const validation = await bcrypt.compare(password, user.user_password); 
 
