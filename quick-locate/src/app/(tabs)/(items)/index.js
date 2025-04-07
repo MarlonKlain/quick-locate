@@ -1,24 +1,26 @@
-import { View, TextInput, Pressable, StyleSheet, FlatList, Text, Alert, TextComponent } from "react-native";
+import { View, TextInput, Pressable, StyleSheet, FlatList, Text} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { use, useEffect, useState } from "react";
 import { Item } from "../../../../backend/class/item"
-// import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD'
 import DropdownComponent from "../../../components/dropdown"
 import { router } from "expo-router";
 
 export default function Items() {
     const [itemsList, setItemsList] = useState([]);
-    const [search, setSearch] = useState()
+    const [search, setSearch] = useState("")
+    //set the filter to "description" as default
     const [column , setColumn] = useState('description');
-    const [sorter, setSorter] = useState()
+    const [sorter, setSorter] = useState("")
     const [refresh, setRefresh] = useState(false);
+    const [filterValue, setFilterValue] = useState(null);
+    const [sorterValue, setSorterValue] = useState(null);
+
+
     let item = new Item();
     
+    //loading all the items from the database
     async function loadDataFromDatabase() {
         try {
-            setColumn('description')
-            setSorter("")
-            setSearch("")
             item.getItemsListFromDatabase()
                 .then((response) => {
                         setItemsList(response.items)
@@ -27,25 +29,30 @@ export default function Items() {
             console.log(error)
         }
     }
-  
+    
+    //this function will handle when the user rolldown the list to update
     const handleRefresh = async () => {
         setRefresh(true)
         loadDataFromDatabase()
         setRefresh(false)
     }
-    
-    useEffect(() => {
-        loadDataFromDatabase()
-    }, []);   
 
-    useEffect(() => {
+    //this useEffect will handle when the user changes the filter to search
+    function handleFilters(search, column, sorter){
         if(search){
             item.filter(column, search, sorter)
             .then((response) => {
                     setItemsList(response.filterResult)
             })
         }
-        
+    }
+
+    useEffect(() => {
+        loadDataFromDatabase()
+    }, []);   
+
+    useEffect(() => {
+        handleFilters(search, column, sorter)
     },[search, column, sorter])
 
     return (
@@ -64,25 +71,44 @@ export default function Items() {
                 </View>
             </View>
             <View style={styles.filters}>
-                <DropdownComponent filters={[
-                    { label: 'Código', value: 'code' },
-                    { label: 'Partnumber', value: 'partnumber' },
-                    { label: 'Descrição', value: 'description' },
-                    { label: 'Localização', value: 'location' },
-                ]}
-                label={"Filtros"}
-                onSendValue= {setColumn}
-                />
+                {/* This component is a dropdown menu, each label is the text that apears to the user and value is the respective value */}
                 <DropdownComponent 
-                filters={[
-                    { label: 'Ordem Crescente', value: 'ASC' },
-                    { label: 'Ordem Decrescente', value: 'DESC' },
-                ]}
-                label={"Ordenar"}
-                onSendValue={setSorter}/>
-                <Pressable onPress={() => loadDataFromDatabase()} style={styles.cleanFilter}> 
-                    <Text style={{textAlign:"center", color:"white", fontFamily:"Roboto-Bold", fontSize: 12}}>Limpar Filtros</Text>
-                </Pressable>
+                    filters={[{ label: 'Código', value: 'code' }, { label: 'Partnumber', value: 'partnumber' }, { label: 'Descrição', value: 'description' }, { label: 'Localização', value: 'location' }]}
+                    // label is the default text the are shown before the user select something
+                    label={"Filtros"}
+                    //When selected a filter, it will pass the value to the column hook
+                    onSendValue={setColumn}
+                    value={filterValue}
+                    // We pass the setSorterValue function from the parent component to the child.
+                    // This allows the child component to update the state that lives in the parent.
+                    // In this way, the parent "controls" the selected value, and the child acts as a controlled component.
+                    // The child uses the setValue={setSorterValue} prop to notify the parent of changes.
+                    setValue={setFilterValue}
+                />
+
+                <DropdownComponent 
+                    filters={[{ label: 'Ordem Crescente', value: 'ASC' }, { label: 'Ordem Decrescente', value: 'DESC' }]}
+                    label={"Ordenar"}
+                    onSendValue={setSorter}
+                    value={sorterValue}
+                    setValue={setSorterValue}
+                />
+                {/* This button will set the filters to default */}
+                <Pressable
+                    onPress={() => {
+                        loadDataFromDatabase();
+                        setSearch("");
+                        setColumn("description"); 
+                        setSorter("");            
+                        setFilterValue(null);    
+                        setSorterValue(null);
+                    }}
+                    style={styles.cleanFilter}
+                >
+                    <Text style={{ textAlign: "center", color: "white", fontFamily: "Roboto-Bold", fontSize: 12 }}>
+                        Limpar Filtros
+                    </Text>
+            </Pressable>
             </View>
             {/* FlatList with Table Layout */}
             <View style={styles.productContainer}>
@@ -98,6 +124,7 @@ export default function Items() {
                     onRefresh={handleRefresh}
                     data={itemsList}
                     renderItem={({ item }) => (
+                        // When longing pressing on an item, it will open a new screen with the item`s information
                         <Pressable onLongPress={() => router.push(`./${item.code}`)}>
                             <View style={styles.row}>
                                 {/* Green Square if location is free */}

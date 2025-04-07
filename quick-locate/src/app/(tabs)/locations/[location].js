@@ -20,9 +20,6 @@ export default function ScreenItemsByLocation(){
     })
     
   }, [location])
-
-  
-
   return(
     <View style={styles.container}>
       <BackButton />
@@ -41,8 +38,6 @@ export default function ScreenItemsByLocation(){
           <FlatList
           data={itemsByLocation}
           renderItem={({item}) => (
-            <Pressable onLongPress={() => {itemByLocationList.deleteFreeLocation(item.code, item.location), console.log("Aqui");
-            }}>
               <View style={styles.row}>
                 {item.code ? (
                     <Text style={styles.cell}>{item.code}</Text>
@@ -53,7 +48,6 @@ export default function ScreenItemsByLocation(){
                 <Text style={styles.cell}>{item.description}</Text>
                 <Text style={styles.cell}>{item.location}</Text>
               </View>
-            </Pressable>
           )}
           />
         </View>

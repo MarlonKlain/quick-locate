@@ -18,7 +18,7 @@ export class User {
     async signUp(){
 
         if(this.#password != this.#passwordConfirm){
-            return console.error("You wrote two different passwords");
+            return Alert.alert("Error","You wrote two different passwords");
         }
 
         const userData = {
@@ -40,6 +40,10 @@ export class User {
     
             const result = await response.json();
             console.log("Response from server:", result);
+            return {
+                data: result,
+                status: response.status
+            } 
         } catch (error) {
             console.error("Error:", error);
         }

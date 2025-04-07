@@ -1,7 +1,7 @@
 // The login page
 
 import { Link, router } from "expo-router";
-import { Text, TextInput, View, Pressable, StyleSheet, Alert } from "react-native";
+import { Text, TextInput, View, Pressable, StyleSheet, Alert, SafeAreaView } from "react-native";
 import { useState } from "react";
 import { User } from "../../../backend/class/user";
 
@@ -11,8 +11,8 @@ export default function Login() {
     const [password, setPassword] = useState();
 
     return (
-        
-        <View style={styles.container}>
+        //The biggest container
+        <SafeAreaView style={styles.container}>
             <View style={styles.welcomeContainer}>
                 <Text style={styles.welcomeText}>Welcome</Text>
             </View>
@@ -28,11 +28,14 @@ export default function Login() {
                     <TextInput 
                         style={styles.inputField}
                         value={password}
+                        secureTextEntry={true}
                         onChangeText={setPassword}>
                     </TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
+                    {/* When the user fullfill username and password fields, these informations are send to the server to validate */}
                     <Pressable style={styles.button} onPress={() => {
+                        //When the button "Confirm" is pressed, it create a new instance of the class user, passing the information entered by the user and the validates in the server side.
                         let user = new User("", "", username , "" , password);
                         user.login()
                         .then((response) => {
@@ -47,7 +50,6 @@ export default function Login() {
                         <Text style={styles.buttonText}>Login</Text>
                     </Pressable>
                     <View>
-                        {/* Create a condition to change the color of the confirm button */}
                         <Text style={{...styles.buttonText, fontSize:20, marginBottom:5}}>Already have an account?</Text>
                         <Link href={"sign-up"} asChild>
                             <Pressable style={styles.button}>
@@ -57,7 +59,7 @@ export default function Login() {
                     </View>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 

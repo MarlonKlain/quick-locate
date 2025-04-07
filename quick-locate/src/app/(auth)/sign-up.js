@@ -1,6 +1,6 @@
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, TextInput, View, SafeAreaView} from "react-native";
 import { User } from "../../../backend/class/user";
 
 export default function Login() {
@@ -11,9 +11,22 @@ export default function Login() {
     const [password, setPassword] = useState();
     const [passwordConfirm, setpasswordConfirm] = useState();
     
-
+    //this method below will handle if all the information provides by the user, were was in agreement with the validations
+    const handleLogin = (firstName, lastName, username, email, password, passwordConfirm) => {
+        let user = new User(firstName, lastName, username, email, password, passwordConfirm)
+        user.signUp()
+        .then((response) => {
+            //If all correct, it sends the user to the login page
+            if(response.status == 201){
+                router.navigate("/login")
+            } else {
+                //if something went wrong, a pop-up will be shown to the user with the specific error
+                Alert.alert("Error", response.data.error)
+            }
+        })
+    }
     return (
-        <View style={style.container}>
+        <SafeAreaView style={style.container}>
             <View style={style.outsideTextContainer}>
                 <Text style={style.outsideText}>Fulfill all the</Text>  
                 <Text style={style.outsideText}>fields</Text>  
@@ -28,11 +41,7 @@ export default function Login() {
                             </Pressable>
                         </Link>
                     </View>
-                        {/* Create a condition to change the color of the confirm button */}
-                        <Pressable style={{...style.button, backgroundColor:"#35B369"}} onPress={() => {
-                                let user = new User(firstName, lastName, username, email, password, passwordConfirm)
-                                user.signUp()
-                                }}>
+                        <Pressable style={{...style.button, backgroundColor:"#35B369"}} onPress={() => handleLogin(firstName, lastName, username, email, password, passwordConfirm)}>
                             <Text style={{...style.buttonText, fontSize:20}}>Confirm</Text>
                         </Pressable>
                 </View>
@@ -60,16 +69,19 @@ export default function Login() {
                     <Text style={style.textField}>Password</Text>
                     <TextInput 
                      style={style.inputField}
+                     secureTextEntry={true}
                      value={password}
                      onChangeText={setPassword}></TextInput>
                     <Text style={style.textField}>Confirm Password</Text>
                     <TextInput 
                      style={style.inputField}
                      value={passwordConfirm}
+                     //secureTextEntry transform the password input in the *
+                     secureTextEntry={true}
                      onChangeText={setpasswordConfirm}></TextInput>
                 </View>
             </View>
-        </View>
+        </SafeAreaView>
     )
 }
 

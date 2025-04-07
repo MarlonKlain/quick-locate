@@ -66,7 +66,7 @@ server.post('/register', async (request, reply) => {
         ${hashedPassword}
         )
         `
-        return reply.status(201).send({message: "User registraded sucessfull: ", user })
+        return reply.status(201).send({message: "User registration successful: ", user })
         
     } catch (error) {
         console.error(error);
@@ -91,8 +91,9 @@ server.post('/login', async (request, reply) => {
         const validation = await bcrypt.compare(password, user.user_password); 
 
         if (user && validation) { 
-            return reply.status(200).send({ message: "User found", user });
+            return reply.status(200).send({ message: "User found", user});
         } else {
+            return reply.status(400).send({ message: "Login or Password incorrect", user });
         }
     } catch (error) {
         console.error(error);

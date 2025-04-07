@@ -53,26 +53,24 @@ export class Locations {
         }
     }
 
-    async deleteFreeLocation(code, location){
-        if(code){
-            console.log("Remova todos os itens endereçados nessa localização antes de exclui-la!")
-        }
+    // async deleteFreeLocation(code, location){
+    //     if(code){
+    //         console.log("Remova todos os itens endereçados nessa localização antes de exclui-la!")
+    //     }
 
-        console.log(data);
-        
-        try {
-            const response = await fetch("https://quick-locate.onrender.com/delete-free-location", {
-                method:"PUT",
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(location)
-            })
-            const result = await response.json()
-            console.log(result);
-            return result
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    //     try {
+    //         const response = await fetch("https://quick-locate.onrender.com/delete-free-location", {
+    //             method:"PUT",
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(location)
+    //         })
+    //         const result = await response.json()
+    //         console.log(result);
+    //         return result
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 }

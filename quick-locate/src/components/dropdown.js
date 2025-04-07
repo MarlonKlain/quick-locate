@@ -2,46 +2,37 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { StyleSheet, Text, View } from 'react-native';
 import { useState } from 'react';
 
-
-const data = [
-    { label: 'Código', value: 'Código' },
-    { label: 'Partnumber', value: 'Partnumber' },
-    { label: 'Descrição', value: 'Descrição' },
-    { label: 'Localização', value: 'Localização' },
-  ];
-
-  const DropdownComponent = ({filters, label, onSendValue}) => {
-    const [value, setValue] = useState(null);
+  const DropdownComponent = ({ filters, label, onSendValue, value, setValue }) => {
     const [isFocus, setIsFocus] = useState(false);
 
-
     return (
-      <View style={styles.container}> 
-        <Dropdown
-          style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-          itemTextStyle={styles.itemTextStyle}
-          placeholderStyle={styles.placeholderStyle}
-          selectedTextStyle={styles.selectedTextStyle}
-          inputSearchStyle={styles.inputSearchStyle}
-          iconStyle={styles.iconStyle}
-          data={filters}
-          maxHeight={300}
-          labelField="label"
-          valueField="value"
-          placeholder={!isFocus ? label : '...'}
-          searchPlaceholder="Search..."
-          value={value}
-          onFocus={() => setIsFocus(true)}
-          onBlur={() => setIsFocus(false)}
-          onChange={item => {
-              setValue(item.value);
-              setIsFocus(false);
-              onSendValue(item.value)
-          }}
-        />
-      </View>
+        <View style={styles.container}> 
+            <Dropdown
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                itemTextStyle={styles.itemTextStyle}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={filters}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? label : '...'}
+                searchPlaceholder="Search..."
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                    setValue(item.value);
+                    setIsFocus(false);
+                    onSendValue(item.value);
+                }}
+            />
+        </View>
     );
-  };
+};
+
 
   export default DropdownComponent;
 

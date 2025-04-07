@@ -1,6 +1,5 @@
 import { StyleSheet, Text, TextInput, View, Pressable, Modal, FlatList, Alert} from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-// import { useLocalDatabase } from '../../../../backend/database/local-database-CRUD';
 import { useEffect, useState } from 'react';
 import {FontAwesome} from "@expo/vector-icons"
 import { Item } from '../../../../backend/class/item';
@@ -12,27 +11,35 @@ export default function itemDetails() {
   const [partnumber, setPartnumber] = useState();
   const [description, setDescription] = useState();
   const [location, setLocation] = useState();
+  //A hook created to show a modal screen when activated 
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
   const [oldLocation, setOldLocation] = useState();
   const [locationHistory, setlocationHistory] = useState()
+  //This is the paramanter from the router, it allows "creating" a specific screen for a specif value
+  //The value can extract from the path/url by this way
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
   const locations = new Locations();
 
-  useEffect (() => {
+  //Loads from the database all the free locations available
+  function loadTheFreeLocations(){
     locations.getAllFreeLocations()
     .then((response) => {
       console.log("Free locations: ", response);
+      //The free locations then are saved to be shown in a modal that will be available to the user select when he decided to change location. 
       setLocationsList(response.freeLocations)
     }
     )
- 
+  }
+
+  //Loads all the information about the select item
+  function loadsTheListsItems() {
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
+      //loads all the locations history about the item
       setlocationHistory(response.itemLocationHistory)
-      // console.log("Response: ", response);
       response.items.forEach(element => {
         setCode(element.code)
         setPartnumber(element.partnumber)
@@ -41,9 +48,25 @@ export default function itemDetails() {
         setOldLocation(element.location)
       });
     })
+  }
 
-  }, [])
+  //Prevents the user to change the location to the previous one
+  function oldLocationValidation(oldLocation, location){
+    if(oldLocation != location){
+      Alert.alert(
+        `Deseja confirmar a atualização de endereço do item: ${description}?`,
+        `Endereço antigo: ${oldLocation}
+Novo endereço: ${location}`, 
+        [ 
+          { text: "Cancelar", style: 'cancel'},
+          { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
+        ]);
+    } else {
+      Alert.alert("Insira uma localização diferente da antiga!")
+    }
+  }
 
+  //Formating the data and time when the location changes were made
   function formatTheHistory(timestamps) {
     const timestampsSplited = timestamps.split("T")
     const date = timestampsSplited[0]
@@ -52,8 +75,15 @@ export default function itemDetails() {
     return formatedTimeStamps
   }
 
+  useEffect (() => {
+    loadTheFreeLocations();
+    loadsTheListsItems();
+  }, [])
+
+ 
   return (
     <View style={styles.container}>
+      {/* This modal below will show all the free locations available */}
         <Modal
         visible={isModalVisible}
         onRequestClose={() => setModalVisible(false)}
@@ -76,6 +106,7 @@ export default function itemDetails() {
           />
         </View>
       </Modal>
+      {/* These item's information below are shown but are not editable, except the location one */}
       <View style={styles.infoContainer}>
         <BackButton />
         <Text style={styles.label}>Code</Text>
@@ -92,6 +123,7 @@ export default function itemDetails() {
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Location</Text>
         <View style={{flexDirection:'row'}}>
+          {/* The location input is converted to be always uppercase */}
           <TextInput style={{...styles.input, width:"88%", marginRight:"2%"}} value={location} onChangeText={(text) => setLocation(text.toUpperCase())} autoCapitalize='characters'/>
           <Pressable style={{width:"10%", alignContent:'center', justifyContent:'center'}} onPress={() => setModalVisible(true)}>
             <FontAwesome name='plus-square' size={36} color={"#35B369"}/>
@@ -114,20 +146,7 @@ export default function itemDetails() {
         />
       </View>
       <View style={styles.buttonContainer}>
-        <Pressable style={styles.confirmButton} onPress={() => {
-          if(oldLocation != location){
-            Alert.alert(
-              `Deseja confirmar a atualização de endereço do item: ${description}?`,
-              `Endereço antigo: ${oldLocation}
-Novo endereço: ${location}`, 
-              [ 
-                { text: "Cancelar", style: 'cancel'},
-                { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
-              ]);
-          } else {
-            Alert.alert("Insira uma localização diferente da antiga!")
-          }
-          }}>
+        <Pressable style={styles.confirmButton} onPress={() => oldLocationValidation(oldLocation, location)}>
           <Text style={styles.buttonText}>Confirm</Text>
         </Pressable>
         <Pressable style={styles.cancelButton} onPress={() => router.back()}>
