@@ -36,6 +36,7 @@ server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
     console.log(`Server running!`);
 });
 
+//this request will atempt to register the user
 server.post('/register', async (request, reply) => {
 
     //Creates a connection pool/client for interacting with a PostgreSQL database
@@ -98,6 +99,7 @@ server.post('/register', async (request, reply) => {
     }
 })
 
+//this request will atempt to login the user
 server.post('/login', async (request, reply) => {
 
     const sql = neon(process.env.DATABASE_URL);
@@ -129,6 +131,7 @@ server.post('/login', async (request, reply) => {
     }
 });
 
+//this request will import the external data into the database
 server.get('/import', async (request, reply) => {
 
     const sql = neon(process.env.DATABASE_URL);
@@ -191,9 +194,11 @@ server.get('/import', async (request, reply) => {
     }
 });
 
+//this request will retrieve all the items and the respective information
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
+        //retrive all the items in the database and all the free location
         const items = await sql`
         SELECT * FROM item i
         RIGHT JOIN item_location il
@@ -225,6 +230,7 @@ server.get('/items/:code', async (request, reply) => {
     }
 })
 
+//This request will retrieve all the location and return only the first letter of each one without repeating 
 server.get('/locations', async (request, reply) => {
     const sql = neon (process.env.DATABASE_URL);
     try {
@@ -255,52 +261,56 @@ server.get('/locations/:location', async (request, reply) => {
     }
 })
 
-server.post('/register-new-location', async (request, reply) => {
-    const sql = neon(process.env.DATABASE_URL);
-    const {item_location} = request.body;
+// server.post('/register-new-location', async (request, reply) => {
+//     const sql = neon(process.env.DATABASE_URL);
+//     const {item_location} = request.body;
 
-    try {
-        const [location] = await sql`
-        INSERT INTO locations(item_location) VALUES (${item_location})
-        `
-        return reply.status(200).send({message: "New locations registered!", location})
-    } catch (error) {
-        return reply.status(400).send({message: "Something went wrong on registering new location!", error: error.message})  
-    } 
-})
+//     try {
+//         const [location] = await sql`
+//         INSERT INTO locations(item_location) VALUES (${item_location})
+//         `
+//         return reply.status(200).send({message: "New locations registered!", location})
+//     } catch (error) {
+//         return reply.status(400).send({message: "Something went wrong on registering new location!", error: error.message})  
+//     } 
+// })
 
-server.post('/delete-location', async (request, reply) => {
-    const sql = neon(process.env.DATABASE_URL);
-    const {item_location} = request.body;
+// server.post('/delete-location', async (request, reply) => {
+//     const sql = neon(process.env.DATABASE_URL);
+//     const {item_location} = request.body;
 
-    try {
-        const [location] = await sql`
-        DELETE FROM locations 
-        WHERE item_location=${item_location}
-        `
-        return reply.status(200).send({message: "Location deleted", location})
-    } catch (error) {
-        return reply.status(400).send({message: "Something went wrong on deleting new location!", error: error.message})  
-    } 
-})
+//     try {
+//         const [location] = await sql`
+//         DELETE FROM locations 
+//         WHERE item_location=${item_location}
+//         `
+//         return reply.status(200).send({message: "Location deleted", location})
+//     } catch (error) {
+//         return reply.status(400).send({message: "Something went wrong on deleting new location!", error: error.message})  
+//     } 
+// })
 
+//This request will update the item location 
 server.put('/modify-location', async(request, reply) =>{
     const sql = neon(process.env.DATABASE_URL);
     const {code, location} = request.body
     try {
+        //starting the transaction
         await sql`BEGIN;`;
+        //Checking if the location provided is not already in the database
             await sql`
             INSERT INTO item_location (location)
             SELECT ${location}
             WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${location});
             `;
-
+            //updating the item location
             await sql`
             UPDATE item 
             SET location = ${location}
             WHERE code = ${code}
             `;
 
+            //Creating the register in the history table of the location change
             await sql(`
             INSERT INTO item_location_history (item_code, location)
             VALUES ($1, $2)
@@ -315,6 +325,7 @@ server.put('/modify-location', async(request, reply) =>{
 
 })
 
+//This request will retrive all the free locations available
 server.get('/all-free-locations', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     try {
@@ -334,10 +345,10 @@ server.get('/all-free-locations', async (request, reply) => {
 server.get('/filter', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const filter = request.query.filter;
-    const column = request.query.column; // Ensure this is a valid column name
+    const column = request.query.column;
 
     // Validate column name to prevent SQL injection
-    const allowedColumns = ['code', 'partnumber', 'description', 'location']; // Add valid columns here
+    const allowedColumns = ['code', 'partnumber', 'description', 'location']; 
     if (!allowedColumns.includes(column)) {
         return reply.status(400).send({ message: "Invalid column name" });
     }
@@ -348,51 +359,45 @@ server.get('/filter', async (request, reply) => {
             RIGHT JOIN item_location il
             ON i.location = il.location
             WHERE i.${column} LIKE $1
-        `, [filter + "%"]); // Parameterized value
+        `, [filter + "%"]);
 
-        return reply.status(200).send({
-            message: "Filter has been applied!",
-            filterResult
-        });
+        return reply.status(200).send({ message: "Filter has been applied!", filterResult });
     } catch (error) {
-        return reply.status(400).send({
-            message: "Filter was not applied!",
-            error: error.message
-        });
+        return reply.status(400).send({ message: "Filter was not applied!", error: error.message });
     }
 });
 
-server.put('/delete-free-location', async (request, reply) => {
-    const sql = neon(process.env.DATABASE_URL);
-    const location = request.body
-    try {
-        const deleteResponse = await sql`
-        DELETE FROM item_location
-        WHERE location = ${location}
-        `
-        return reply.status(200).send({message: "Location deleted!", deleteResponse})
-    } catch (error) {
-        return reply.status(400).send({message: "Location not deleted, something went wrong!", error: error.message})
-    }
-})
+// server.put('/delete-free-location', async (request, reply) => {
+//     const sql = neon(process.env.DATABASE_URL);
+//     const location = request.body
+//     try {
+//         const deleteResponse = await sql`
+//         DELETE FROM item_location
+//         WHERE location = ${location}
+//         `
+//         return reply.status(200).send({message: "Location deleted!", deleteResponse})
+//     } catch (error) {
+//         return reply.status(400).send({message: "Location not deleted, something went wrong!", error: error.message})
+//     }
+// })
 
-server.post('/upload', async (req, reply) => {
-    try {
-        const data = await req.file(); // Get the uploaded file
+// server.post('/upload', async (req, reply) => {
+//     try {
+//         const data = await req.file(); // Get the uploaded file
 
-        if (!data) {
-            return reply.status(400).send({ error: 'No file uploaded' });
-        }
+//         if (!data) {
+//             return reply.status(400).send({ error: 'No file uploaded' });
+//         }
 
-        console.log('Received file:', data.filename); // File name
+//         console.log('Received file:', data.filename); // File name
 
-        // Save file to server (optional)
-        const uploadPath = path.join(__dirname, 'uploads', data.filename);
-        await pipeline(data.file, fs.createWriteStream(uploadPath));
+//         // Save file to server (optional)
+//         const uploadPath = path.join(__dirname, 'uploads', data.filename);
+//         await pipeline(data.file, fs.createWriteStream(uploadPath));
 
-        reply.send({ message: 'File uploaded successfully', filename: data.filename });
-    } catch (error) {
-        console.error('Upload error:', error);
-        reply.status(500).send({ error: 'File upload failed' });
-    }
-});
+//         reply.send({ message: 'File uploaded successfully', filename: data.filename });
+//     } catch (error) {
+//         console.error('Upload error:', error);
+//         reply.status(500).send({ error: 'File upload failed' });
+//     }
+// });
