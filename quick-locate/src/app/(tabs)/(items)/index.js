@@ -133,6 +133,7 @@ export default function Items() {
                                 ) : (
                                     <View style={styles.freeLocation} />
                                 )}
+                                {/* The ?? operator (null coalescing) evaluates to the right-hand side if and only if the left-hand side is either null or undefined. */}
                                 <Text style={styles.cell}>{item.partnumber ?? ""}</Text>
                                 <Text style={styles.cell}>{item.description ?? ""}</Text>
                                 <Text style={styles.cell}>{item.location}</Text>

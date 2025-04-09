@@ -10,19 +10,23 @@ export default function Items() {
     const locations = new Locations();
 
 
-    function deleteLocation (location) {
-        Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
-          { text: 'Cancelar', style: 'cancel'},
-          { text: '', style: 'cancel' },
-          { text: 'DELETAR', onPress: async () => await APIlocations.deleteLocationDatabase(location), style: 'destructive' },
-        ]);
-      };
+    // function deleteLocation (location) {
+    //     Alert.alert(`DELETAR LOCALIZAÇÃO ${location}?`, 'Escolha uma opção', [
+    //       { text: 'Cancelar', style: 'cancel'},
+    //       { text: '', style: 'cancel' },
+    //       { text: 'DELETAR', onPress: async () => await APIlocations.deleteLocationDatabase(location), style: 'destructive' },
+    //     ]);
+    //   };
     
-    useEffect(()=>{
+    //This function will load all the locations that exists in the database, agroup by the first character, and return each one
+    function loadsAllLocations(){
         locations.getLocations()
         .then((response) => {
             setLocationsList(response.locations)
         })
+    }
+    useEffect(()=>{
+       loadsAllLocations();
     }, [])
 
     return (
@@ -34,7 +38,8 @@ export default function Items() {
                 <FlatList
                     data={locationsList}
                     renderItem={({ item }) => (
-                        <Pressable onLongPress={() => deleteLocation(item.first_character)} onPress={() => router.push(`./locations/${item.first_character}`)}>
+                        //When a location is pressed, it will open a screen with all the items that are located in the adress that start with the character selected
+                        <Pressable onPress={() => router.push(`./locations/${item.first_character}`)}>
                             <View style={styles.card}>
                                 <Text style={styles.cardText}>{item.first_character}</Text>
                             </View>

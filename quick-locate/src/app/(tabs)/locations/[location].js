@@ -1,7 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react"
-import { View, Text, Pressable, StyleSheet } from "react-native";
-// import { useLocalDatabase } from "../../../../backend/database/local-database-CRUD";
+import { View, Text, StyleSheet } from "react-native";
 import { FlatList } from "react-native";
 import { Locations } from "../../../../backend/class/locations";
 import BackButton from "../../../components/back-button";
@@ -12,14 +11,19 @@ export default function ScreenItemsByLocation(){
   const {location} = useLocalSearchParams();
   const itemByLocationList = new Locations();
 
-  useEffect(() => {
+  //This function will load all the items from a specific location
+  function loadsItemsByLocation(location) {
     itemByLocationList.getLocations(location).
     then((response) => {
       console.log(response)
       setItemsByLocation(response.itemsByLocation)
     })
     
+  }
+  useEffect(() => {
+   loadsItemsByLocation(location);
   }, [location])
+
   return(
     <View style={styles.container}>
       <BackButton />

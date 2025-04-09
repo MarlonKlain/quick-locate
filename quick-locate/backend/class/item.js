@@ -1,17 +1,22 @@
 export class Item {
 
+    //this method works in two different ways
+    //if any paramanter is passed, it will return all the items from the database
+    //if a code is passed as paramanter it will return all the information about that respective item(code)
     async getItemsListFromDatabase(code = undefined){
         if(!code){
             try {
+                //Making the request
                 const response = await fetch("https://quick-locate.onrender.com/items", {
+                    //setting the method type
                     method: "GET",
+                    //Extra information sent with the request
                     headers: {
-                        "Access-Control-Allow-Headers" : "Content-Type",
-                        "Access-Control-Allow-Origin": "*",
+                        //The data type of the send/retrieve data
                         "Content-Type": "application/json",
-                        "Access-Control-Allow-Methods": "OPTIONS,POST,GET,PATCH"
                    },
                 });
+                // Converts the server's response from text format to JavaScript objects
                 const result = await response.json();
                 return result
             } catch (error) {
@@ -35,7 +40,10 @@ export class Item {
         }
     }
 
+    //this method will update the item location, based on what the user choose
     async modifyLocation(code, location) {
+
+        //creating a object that will be sent
         const data = {
             code: code,
             location: location
@@ -43,11 +51,11 @@ export class Item {
 
         try {
             const response = await fetch("https://quick-locate.onrender.com/modify-location", {
-                mode: 'no-cors',
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
                 },
+                //Converts the JavaScript object (data) into a JSON string
                 body: JSON.stringify(data)
             });
             const result = await response.json()
@@ -58,19 +66,20 @@ export class Item {
         }
     }
 
+    //this method will be used every time the user uses the search bar or select a filter
     async filter(column, filter, sorter){
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
-                mode: 'no-cors',
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
             })
             const result = await response.json()
+
+            //sorting the data in ascending or descendig, based on what the user choose
             if(sorter == "ASC"){
                 console.log(column);
-                
                 result.filterResult.sort((a, b ) => a[column] - b[column])
                 console.log("ASC:", result);
                 return result

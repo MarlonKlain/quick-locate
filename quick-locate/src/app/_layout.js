@@ -6,6 +6,7 @@ import { Stack } from "expo-router"
 SplashScreen.preventAutoHideAsync();
 
 export default function Layout() {
+    //setting up the external font
     const [loaded, error] = useFonts ({
         'Roboto-Thin': require('../../assets/fonts/Roboto-Thin.ttf'),
         'Roboto-Regular': require('../../assets/fonts/Roboto-Regular.ttf'),
@@ -14,6 +15,7 @@ export default function Layout() {
     })
 
     useEffect(() => {
+      //If the font are not loaded it will show the native splashscreen
         if (loaded || error) {
           SplashScreen.hideAsync();
         }

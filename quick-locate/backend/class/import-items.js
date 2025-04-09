@@ -11,7 +11,7 @@ export class ImportTtems {
         const sheetName = workbook.SheetNames[0]; 
         // Get the first sheet name
         const worksheet = workbook.Sheets[sheetName];
-        // Convert sheet data to JSOksN
+        // Convert sheet data to a JSON object
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
         console.log(jsonData);
         return jsonData;

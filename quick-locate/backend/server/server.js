@@ -8,48 +8,71 @@ import { ImportTtems } from "../class/import-items.js";
 import fs from "fs";
 import path from "path";
 
-//The folder where the uploads will be stored
-// const upload = multer({dest: 'uploads/'})
-
+//Creates a new Fastify web server instance
 const server = fastify()
-server.register(multipart)
+
+//Loads environment variables from .env file
+//Makes variables available via process.env
 dotenv.config()
 
+//Security mechanism for cross-domain requests
 server.register(cors, {
-    origin: "*", // Allows all origins
+    // allows requests from any domain
+    //origin: "*",
+    //List specific allowed domains
+    origin: ["https://your-frontend.com", "http://localhost:3000"],
+    //specifies allowed HTTP verbs
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 });
 
+//This starts the Fastify server and makes it listen for incoming requests
+//Configuration object (where/how to listen)
+//Callback function (what to do when server starts)
+//server.listen(configuration, callback)
+
 server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
-    
+    //host: '0.0.0.0'
+    //Makes the server available on all network interfaces
     console.log(`Server running!`);
 });
 
 server.post('/register', async (request, reply) => {
+
+    //Creates a connection pool/client for interacting with a PostgreSQL database
     const sql = neon(process.env.DATABASE_URL);
     
-    //When destructuring, the name of the variable must match the name of variable at the front end
+    //getting the information provided by the user
+    //When destructuring, the name of the variable must match the name of the variable retrieved from the client-side
     const { firstName, lastName, username, email, password} = request.body;
 
+    //Checking if any variable were not fulfilled
     if(!firstName || !lastName || !username || !email || !password){
         return reply.status(400).send({ error: "All fields are required" });     
     }
 
+    //checking if the firstname or lastname were fulfilled as alphanumeric
     if ((firstName || lastName).match(/\d/)){
         return reply.status(400).send({ error: "First and Last name must not have any number" });
-        
     }
+
+    //Setting a minimun of at least 8 character to the password
     if((password.length < 8)){
         return reply.status(400).send({ error: "Your password must have above 8 characteres" });
     }
 
+    //For security purpose, setting the password to be alphanumeric
     if(!password.match(/\d/)){
         return reply.status(400).send({ error: "Your password must be alphanumeric (Use letters and numbers)" });
     }
 
+    //Transforming the password to hash to be stored in the databased
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
+        // Using array destructuring [user] because:
+        //SQL queries return results as an array of rows
+        //INSERT operations typically return one row (the created record)
+        //[user] extracts the first (and only) element from the results array
         const [user] = await sql `
         INSERT INTO users(
         first_name,
@@ -59,6 +82,7 @@ server.post('/register', async (request, reply) => {
         user_password
         )
         VALUES (
+        -- Parameterized values prevent SQL injection
         ${firstName},
         ${lastName},
         ${username},
@@ -75,10 +99,12 @@ server.post('/register', async (request, reply) => {
 })
 
 server.post('/login', async (request, reply) => {
+
     const sql = neon(process.env.DATABASE_URL);
     
     const {username, password} = request.body;
     
+    //Checking if the user fulfilled all the fields
     if (!username || !password) {
         return reply.status(400).send({ error: "All fields are required" });
     }
@@ -88,8 +114,10 @@ server.post('/login', async (request, reply) => {
             SELECT * FROM users
             WHERE username = ${username}
         `
+        //Checking if the user fulfilled correct the password
         const validation = await bcrypt.compare(password, user.user_password); 
 
+        //Makes the login if the username matches the password
         if (user && validation) { 
             return reply.status(200).send({ message: "User found", user});
         } else {
@@ -102,36 +130,64 @@ server.post('/login', async (request, reply) => {
 });
 
 server.get('/import', async (request, reply) => {
+
     const sql = neon(process.env.DATABASE_URL);
+
+    //instigating the ImportTtems class 
     let sheet = new ImportTtems();
+    
+    //importing the external data, in xlsx, provided by the user
     const itemsList = await sheet.storeData()
 
 
     try {
+        // Start a database transaction - all following operations must succeed or all will be rolled back
+        //Ensures atomicity - either all inserts succeed or none do
         await sql`BEGIN;`;
-
+    
+        // Process each item in the import list
         for (const item of itemsList) {
+            // First: Ensure location exists in item_location table
+            // This uses "WHERE NOT EXISTS" to prevent duplicate locations
             await sql`
             INSERT INTO item_location (location)
             SELECT ${item['location']}
-            WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${item['location']});
+            WHERE NOT EXISTS (
+                SELECT 1 FROM item_location 
+                WHERE location = ${item['location']}
+            );
             `;
-
+    
+            // Second: Insert the actual item record
+            // Uses parameterized queries (${}) to prevent SQL injection
             await sql`
             INSERT INTO item (code, partnumber, description, location)
-            VALUES (${item['code']}, ${item['partnumber']}, ${item['description']}, ${item['location']});
+            VALUES (
+                ${item['code']},         
+                ${item['partnumber']},    
+                ${item['description']},   
+                ${item['location']}       
+            );
             `;
         }
-
+    
+        // Finalize transaction if all operations succeeded
         await sql`COMMIT;`;
-
+    
+        // Return success response
         return reply.status(200).send({ message: "Import completed successfully" });
-
+    
     } catch (error) {
-        
+        // Critical: Rollback transaction on any error to maintain data consistency
         await sql`ROLLBACK;`;
-        console.error(error);
-        return reply.status(500).send({ error: "Import failed" });
+        
+        // Log full error for debugging (never expose details to client)
+        console.error("Import error:", error);
+        
+        // Generic error message protects system information
+        return reply.status(500).send({ 
+            error: "Import failed - no changes were saved" 
+        });
     }
 });
 

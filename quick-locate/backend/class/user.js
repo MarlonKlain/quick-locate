@@ -1,6 +1,10 @@
 import { Alert } from "react-native";
 
 export class User {
+    // # prefix indicates private class fields
+    // These properties can only be accessed/modified within the class
+    // Hidden from external code for security/encapsulation
+    // Common practice for sensitive data like passwords
     #username;
     #email;
     #password;
@@ -14,9 +18,8 @@ export class User {
         this.#password = password;
         this.#passwordConfirm = passwordConfirm
     }
-
     async signUp(){
-
+        //checking if both passwords are the same
         if(this.#password != this.#passwordConfirm){
             return Alert.alert("Error","You wrote two different passwords");
         }
@@ -48,7 +51,6 @@ export class User {
             console.error("Error:", error);
         }
     }
-
     async login(){
 
         const userData = {

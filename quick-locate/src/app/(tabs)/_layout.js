@@ -7,10 +7,14 @@ export default function Layout() {
     return (
                 <Tabs>
                     <Tabs.Screen name="(items)" options={{
+                        //Not showing the reader
                         headerShown:false,
+                        //The header title
+                        //Even hiding the title, the name is be setting, because it will be the bottom tab name that will be shown
                         title: "Items",
                         tabBarActiveTintColor: "#2295BB",
                         tabBarIcon: ({focused, color, size}) => {
+                            //Changing the tab color when selected
                             if(focused){
                                 return <Feather name="box" color={"#2295BB"} size={24}/>
                             }
