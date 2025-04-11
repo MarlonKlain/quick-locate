@@ -1,79 +1,77 @@
 import { fastify } from "fastify";
-import multipart from "@fastify/multipart";
 import cors from "@fastify/cors";
 import dotenv from "dotenv";
 import { neon } from "@neondatabase/serverless";
 import bcrypt from "bcryptjs";
 import { ImportTtems } from "../class/import-items.js";
-import fs from "fs";
-import path from "path";
 
-//Creates a new Fastify web server instance
+
+// Creates a new Fastify web server instance
 const server = fastify()
 
-//Loads environment variables from .env file
-//Makes variables available via process.env
+// Loads environment variables from .env file
+// Makes variables available via process.env
 dotenv.config()
 
-//Security mechanism for cross-domain requests
+// Security mechanism for cross-domain requests
 server.register(cors, {
-    // allows requests from any domain
-    //origin: "*",
-    //List specific allowed domains
-    origin: ["https://your-frontend.com", "http://localhost:3000"],
-    //specifies allowed HTTP verbs
+    // Allows requests from any domain
+    // origin: "*",
+    // List specific allowed domains
+    origin: ["https://your-frontend.com", "http://localhost:3000", "http://localhost:8081"],
+    // Specifies allowed HTTP verbs
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
 });
 
-//This starts the Fastify server and makes it listen for incoming requests
-//Configuration object (where/how to listen)
-//Callback function (what to do when server starts)
-//server.listen(configuration, callback)
+// This starts the Fastify server and makes it listen for incoming requests
+// Configuration object (where/how to listen)
+// Callback function (what to do when server starts)
+// server.listen(configuration, callback)
 
-server.listen({ host:'0.0.0.0', port: process.env.PORT ?? 3000}, () => {
-    //host: '0.0.0.0'
-    //Makes the server available on all network interfaces
+server.listen({ host: '0.0.0.0', port: process.env.PORT ?? 3000 }, () => {
+    // host: '0.0.0.0'
+    // Makes the server available on all network interfaces
     console.log(`Server running!`);
 });
 
-//this request will atempt to register the user
+// This request will attempt to register the user
 server.post('/register', async (request, reply) => {
 
-    //Creates a connection pool/client for interacting with a PostgreSQL database
+    // Creates a connection pool/client for interacting with a PostgreSQL database
     const sql = neon(process.env.DATABASE_URL);
     
-    //getting the information provided by the user
-    //When destructuring, the name of the variable must match the name of the variable retrieved from the client-side
-    const { firstName, lastName, username, email, password} = request.body;
+    // Gets the information provided by the user
+    // When destructuring, the variable names must match those from the client-side
+    const { firstName, lastName, username, email, password } = request.body;
 
-    //Checking if any variable were not fulfilled
+    // Checks if any required field was not provided
     if(!firstName || !lastName || !username || !email || !password){
         return reply.status(400).send({ error: "All fields are required" });     
     }
 
-    //checking if the firstname or lastname were fulfilled as alphanumeric
+    // Checks if first name or last name contain numbers
     if ((firstName || lastName).match(/\d/)){
         return reply.status(400).send({ error: "First and Last name must not have any number" });
     }
 
-    //Setting a minimun of at least 8 character to the password
+    // Sets a minimum of at least 8 characters for the password
     if((password.length < 8)){
-        return reply.status(400).send({ error: "Your password must have above 8 characteres" });
+        return reply.status(400).send({ error: "Your password must have at least 8 characters" });
     }
 
-    //For security purpose, setting the password to be alphanumeric
+    // For security purposes, requires the password to be alphanumeric
     if(!password.match(/\d/)){
-        return reply.status(400).send({ error: "Your password must be alphanumeric (Use letters and numbers)" });
+        return reply.status(400).send({ error: "Your password must be alphanumeric (use letters and numbers)" });
     }
 
-    //Transforming the password to hash to be stored in the databased
+    // Transforms the password into a hash for secure database storage
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
         // Using array destructuring [user] because:
-        //SQL queries return results as an array of rows
-        //INSERT operations typically return one row (the created record)
-        //[user] extracts the first (and only) element from the results array
+        // SQL queries return results as an array of rows
+        // INSERT operations typically return one row (the created record)
+        // [user] extracts the first (and only) element from the results array
         const [user] = await sql `
         INSERT INTO users(
         first_name,
@@ -99,14 +97,14 @@ server.post('/register', async (request, reply) => {
     }
 })
 
-//this request will atempt to login the user
+// This request will attempt to log in the user
 server.post('/login', async (request, reply) => {
 
     const sql = neon(process.env.DATABASE_URL);
     
-    const {username, password} = request.body;
+    const { username, password } = request.body;
     
-    //Checking if the user fulfilled all the fields
+    // Checking if the user filled in all required fields
     if (!username || !password) {
         return reply.status(400).send({ error: "All fields are required" });
     }
@@ -116,18 +114,18 @@ server.post('/login', async (request, reply) => {
             SELECT * FROM users
             WHERE username = ${username}
         `
-        //Checking if the user fulfilled correct the password
+        // Verifying if the entered password matches the stored hash
         const validation = await bcrypt.compare(password, user.user_password); 
 
-        //Makes the login if the username matches the password
+        // Successful login if username exists and password is correct
         if (user && validation) { 
-            return reply.status(200).send({ message: "User found", user});
+            return reply.status(200).send({ message: "Login successful", user });
         } else {
-            return reply.status(400).send({ message: "Login or Password incorrect", user });
+            return reply.status(400).send({ error: "Username or password is incorrect" });
         }
     } catch (error) {
         console.error(error);
-        return reply.status(404).send({ message: "User not found"});
+        return reply.status(404).send({ error: "User not found" });
     }
 });
 
@@ -194,11 +192,11 @@ server.get('/import', async (request, reply) => {
     }
 });
 
-//this request will retrieve all the items and the respective information
+// This request will retrieve all items and their respective information
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     try {
-        //retrive all the items in the database and all the free location
+        // Retrieve all items in the database and all free locations
         const items = await sql`
         SELECT * FROM item i
         RIGHT JOIN item_location il
@@ -230,16 +228,16 @@ server.get('/items/:code', async (request, reply) => {
     }
 })
 
-//This request will retrieve all the location and return only the first letter of each one without repeating 
+// This request will retrieve all locations and return only the first letter of each one without duplicates
 server.get('/locations', async (request, reply) => {
-    const sql = neon (process.env.DATABASE_URL);
+    const sql = neon(process.env.DATABASE_URL);
     try {
         const locations = await sql`
         SELECT DISTINCT LEFT(location, 1) AS first_character
         FROM item
         ORDER BY first_character;
         `
-        return reply.status(200).send({messsage: "All locations returned", locations})
+        return reply.status(200).send({message: "All locations returned", locations})
     } catch (error) {
         return reply.status(400).send({ message: "Failed to get the locations", error: error.message});
     }
@@ -290,27 +288,27 @@ server.get('/locations/:location', async (request, reply) => {
 //     } 
 // })
 
-//This request will update the item location 
+// This request will update the item location
 server.put('/modify-location', async(request, reply) =>{
     const sql = neon(process.env.DATABASE_URL);
     const {code, location} = request.body
     try {
-        //starting the transaction
+        // Starting the transaction
         await sql`BEGIN;`;
-        //Checking if the location provided is not already in the database
+        // Checking if the provided location doesn't already exist in the database
             await sql`
             INSERT INTO item_location (location)
             SELECT ${location}
             WHERE NOT EXISTS (SELECT 1 FROM item_location WHERE location = ${location});
             `;
-            //updating the item location
+            // Updating the item location
             await sql`
             UPDATE item 
             SET location = ${location}
             WHERE code = ${code}
             `;
 
-            //Creating the register in the history table of the location change
+            // Creating a record in the history table of the location change
             await sql(`
             INSERT INTO item_location_history (item_code, location)
             VALUES ($1, $2)
@@ -322,10 +320,9 @@ server.put('/modify-location', async(request, reply) =>{
         await sql`ROLLBACK`
         reply.status(400).send({message: "Something went wrong when updating location", error: error.message})
     }
-
 })
 
-//This request will retrive all the free locations available
+// This request will retrieve all available free locations
 server.get('/all-free-locations', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
     try {
@@ -338,7 +335,7 @@ server.get('/all-free-locations', async (request, reply) => {
         `
         return reply.status(200).send({message: "All free locations returned", freeLocations})
     } catch (error) {
-        return reply.status(400).send({message: "Something went wrong searching for free locations", error: error.message})
+        return reply.status(400).send({message: "Something went wrong while searching for free locations", error: error.message})
     }
 })
 
@@ -366,7 +363,6 @@ server.get('/filter', async (request, reply) => {
         return reply.status(400).send({ message: "Filter was not applied!", error: error.message });
     }
 });
-
 // server.put('/delete-free-location', async (request, reply) => {
 //     const sql = neon(process.env.DATABASE_URL);
 //     const location = request.body

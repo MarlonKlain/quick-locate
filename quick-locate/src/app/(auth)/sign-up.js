@@ -11,16 +11,16 @@ export default function Login() {
     const [password, setPassword] = useState();
     const [passwordConfirm, setpasswordConfirm] = useState();
     
-    //this method below will handle if all the information provides by the user, were was in agreement with the validations
+    // This method verifies if all user-provided information meets validation requirements
     const handleLogin = (firstName, lastName, username, email, password, passwordConfirm) => {
         let user = new User(firstName, lastName, username, email, password, passwordConfirm)
         user.signUp()
         .then((response) => {
-            //If all correct, it sends the user to the login page
+            // If all validations pass, redirect user to login page
             if(response.status == 201){
                 router.navigate("/login")
             } else {
-                //if something went wrong, a pop-up will be shown to the user with the specific error
+                // If validation fails, show error message to user
                 Alert.alert("Error", response.data.error)
             }
         })
@@ -28,7 +28,7 @@ export default function Login() {
     return (
         <SafeAreaView style={style.container}>
             <View style={style.outsideTextContainer}>
-                <Text style={style.outsideText}>Fulfill all the</Text>  
+                <Text style={style.outsideText}>Fill in all the</Text>  
                 <Text style={style.outsideText}>fields</Text>  
             </View>
             <View style={style.infosContainer}>
@@ -76,7 +76,7 @@ export default function Login() {
                     <TextInput 
                      style={style.inputField}
                      value={passwordConfirm}
-                     //secureTextEntry transform the password input in the *
+                     // secureTextEntry transforms password input into asterisks (*)
                      secureTextEntry={true}
                      onChangeText={setpasswordConfirm}></TextInput>
                 </View>

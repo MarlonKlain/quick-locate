@@ -1,24 +1,24 @@
 export class Item {
 
-    //this method works in two different ways
-    //if any paramanter is passed, it will return all the items from the database
-    //if a code is passed as paramanter it will return all the information about that respective item(code)
-    async getItemsListFromDatabase(code = undefined){
-        if(!code){
+    // This method works in two different ways:
+    // If no parameter is passed, it will return all items from the database
+    // If a code is passed as parameter, it will return information about that specific item
+    async getItemsListFromDatabase(code = undefined) {
+        if(!code) {
             try {
-                //Making the request
+                // Making the request
                 const response = await fetch("https://quick-locate.onrender.com/items", {
-                    //setting the method type
+                    // Setting the method type
                     method: "GET",
-                    //Extra information sent with the request
+                    // Extra information sent with the request
                     headers: {
-                        //The data type of the send/retrieve data
+                        // The data type of the sent/retrieved data
                         "Content-Type": "application/json",
                    },
                 });
                 // Converts the server's response from text format to JavaScript objects
                 const result = await response.json();
-                return result
+                return result;
             } catch (error) {
                 console.error("Error:", error);
             }
@@ -33,17 +33,16 @@ export class Item {
                 const result = await response.json();
                 console.log(result);
                 
-                return result
+                return result;
             } catch (error) {
                 console.error("Error:", error);
             }
         }
     }
 
-    //this method will update the item location, based on what the user choose
+    // This method updates the item location based on user selection
     async modifyLocation(code, location) {
-
-        //creating a object that will be sent
+        // Creating an object that will be sent
         const data = {
             code: code,
             location: location
@@ -55,44 +54,44 @@ export class Item {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                //Converts the JavaScript object (data) into a JSON string
+                // Converts the JavaScript object (data) into a JSON string
                 body: JSON.stringify(data)
             });
-            const result = await response.json()
+            const result = await response.json();
             console.log(result);
-            return result
+            return result;
         } catch (error) {
             console.log(error);
         }
     }
 
-    //this method will be used every time the user uses the search bar or select a filter
-    async filter(column, filter, sorter){
+    // This method is used whenever the user uses the search bar or selects a filter
+    async filter(column, filter, sorter) {
         try {
             const response = await fetch(`https://quick-locate.onrender.com/filter?column=${column}&filter=${filter}`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
                 }
-            })
-            const result = await response.json()
+            });
+            const result = await response.json();
 
-            //sorting the data in ascending or descendig, based on what the user choose
-            if(sorter == "ASC"){
+            // Sorting the data in ascending or descending order based on user selection
+            if(sorter == "ASC") {
                 console.log(column);
-                result.filterResult.sort((a, b ) => a[column] - b[column])
+                result.filterResult.sort((a, b) => a[column] - b[column]);
                 console.log("ASC:", result);
-                return result
-            } else if(sorter == "DESC"){
-                result.filterResult.sort((a, b ) => b[column] - a[column])
+                return result;
+            } else if(sorter == "DESC") {
+                result.filterResult.sort((a, b) => b[column] - a[column]);
                 console.log("DESC:", result);
-                return result
+                return result;
             } else {
                 console.log("Not sorted:", result);
-                return result
+                return result;
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 }

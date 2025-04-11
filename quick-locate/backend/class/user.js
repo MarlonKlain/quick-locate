@@ -1,10 +1,11 @@
+import { router } from "expo-router";
 import { Alert } from "react-native";
 
 export class User {
     // # prefix indicates private class fields
     // These properties can only be accessed/modified within the class
-    // Hidden from external code for security/encapsulation
-    // Common practice for sensitive data like passwords
+    // They are hidden from external code for security/encapsulation
+    // This is common practice for sensitive data like passwords
     #username;
     #email;
     #password;
@@ -19,7 +20,7 @@ export class User {
         this.#passwordConfirm = passwordConfirm
     }
     async signUp(){
-        //checking if both passwords are the same
+        // Checking if both passwords are the same
         if(this.#password != this.#passwordConfirm){
             return Alert.alert("Error","You wrote two different passwords");
         }
@@ -59,7 +60,7 @@ export class User {
         }
 
         try {
-            const response = await fetch(`https://quick-locate.onrender.com/login`, {
+            const response = await fetch("https://quick-locate.onrender.com/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -74,9 +75,4 @@ export class User {
         }
     }
 
-    logout(){
-
-    }
-
-    
 }

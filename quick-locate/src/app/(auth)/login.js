@@ -1,17 +1,16 @@
-// The login page
-
+// Login page component
 import { Link, router } from "expo-router";
 import { Text, TextInput, View, Pressable, StyleSheet, Alert, SafeAreaView } from "react-native";
 import { useState } from "react";
 import { User } from "../../../backend/class/user";
 
 export default function Login() {
-    //Hooks that will be used to received the user's information
+    // Hooks to store the user's login information
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
 
     return (
-        //The biggest container
+        // Main container
         <SafeAreaView style={styles.container}>
             <View style={styles.welcomeContainer}>
                 <Text style={styles.welcomeText}>Welcome</Text>
@@ -33,16 +32,17 @@ export default function Login() {
                     </TextInput>
                 </View>
                 <View style={styles.buttonContainer}>
-                    {/* When the user fullfill username and password fields, these informations are send to the server to validate */}
+                    {/* When the user fills in username and password fields, this information is sent to the server for validation */}
                     <Pressable style={styles.button} onPress={() => {
-                        //When the button "Confirm" is pressed, it create a new instance of the class user, passing the information entered by the user and the validates in the server side.
+                        // When the "Confirm" button is pressed, it creates a new User instance
+                        // with the entered credentials and validates them on the server side
                         let user = new User("", "", username , "" , password);
                         user.login()
                         .then((response) => {
                             if(response.message != "User found"){
                                 Alert.alert(response.message)
                             } else {
-                                router.dismissAll( )
+                                router.dismissAll()
                                 router.replace("/(tabs)")
                             }
                         })

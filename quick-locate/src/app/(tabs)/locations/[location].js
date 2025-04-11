@@ -5,21 +5,20 @@ import { FlatList } from "react-native";
 import { Locations } from "../../../../backend/class/locations";
 import BackButton from "../../../components/back-button";
 
-
 export default function ScreenItemsByLocation(){
   const [itemsByLocation, setItemsByLocation] = useState();
   const {location} = useLocalSearchParams();
   const itemByLocationList = new Locations();
 
-  //This function will load all the items from a specific location
+  // Load all items from a specific location
   function loadsItemsByLocation(location) {
     itemByLocationList.getLocations(location).
     then((response) => {
       console.log(response)
       setItemsByLocation(response.itemsByLocation)
     })
-    
   }
+
   useEffect(() => {
    loadsItemsByLocation(location);
   }, [location])
@@ -115,5 +114,5 @@ const styles = StyleSheet.create({
     alignSelf: "center", 
     borderRadius: 4, 
     marginLeft:5
-},
+  },
 })

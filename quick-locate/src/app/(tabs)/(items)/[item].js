@@ -11,34 +11,34 @@ export default function itemDetails() {
   const [partnumber, setPartnumber] = useState();
   const [description, setDescription] = useState();
   const [location, setLocation] = useState();
-  //A hook created to show a modal screen when activated 
+  // Hook to control modal visibility
   const [isModalVisible, setModalVisible] = useState(false);
   const [locationsList, setLocationsList] = useState();
   const [oldLocation, setOldLocation] = useState();
   const [locationHistory, setlocationHistory] = useState()
-  //This is the paramanter from the router, it allows "creating" a specific screen for a specif value
-  //The value can extract from the path/url by this way
+  // Parameter from router that allows creating specific screens for specific values
+  // The value can be extracted from the path/URL this way
   const { item } = useLocalSearchParams();
 
   let itemsInfo = new Item()
   const locations = new Locations();
 
-  //Loads from the database all the free locations available
+  // Loads all available free locations from the database
   function loadTheFreeLocations(){
     locations.getAllFreeLocations()
     .then((response) => {
       console.log("Free locations: ", response);
-      //The free locations then are saved to be shown in a modal that will be available to the user select when he decided to change location. 
+      // Free locations are saved to be shown in a modal when the user decides to change location
       setLocationsList(response.freeLocations)
     }
     )
   }
 
-  //Loads all the information about the select item
+  // Loads all information about the selected item
   function loadsTheListsItems() {
     itemsInfo.getItemsListFromDatabase(item)
     .then((response) => {
-      //loads all the locations history about the item
+      // Loads the item's complete location history
       setlocationHistory(response.itemLocationHistory)
       response.items.forEach(element => {
         setCode(element.code)
@@ -50,7 +50,7 @@ export default function itemDetails() {
     })
   }
 
-  //Prevents the user to change the location to the previous one
+  // Prevents the user from changing to the previous location
   function oldLocationValidation(oldLocation, location){
     if(oldLocation != location){
       Alert.alert(
@@ -66,7 +66,7 @@ Novo endereço: ${location}`,
     }
   }
 
-  //Formating the data and time when the location changes were made
+  // Formats the date and time when location changes were made
   function formatTheHistory(timestamps) {
     const timestampsSplited = timestamps.split("T")
     const date = timestampsSplited[0]
@@ -80,10 +80,9 @@ Novo endereço: ${location}`,
     loadsTheListsItems();
   }, [])
 
- 
   return (
     <View style={styles.container}>
-      {/* This modal below will show all the free locations available */}
+      {/* Modal showing all available free locations */}
         <Modal
         visible={isModalVisible}
         onRequestClose={() => setModalVisible(false)}
@@ -106,7 +105,7 @@ Novo endereço: ${location}`,
           />
         </View>
       </Modal>
-      {/* These item's information below are shown but are not editable, except the location one */}
+      {/* Item information (read-only except location field) */}
       <View style={styles.infoContainer}>
         <BackButton />
         <Text style={styles.label}>Code</Text>
@@ -123,7 +122,7 @@ Novo endereço: ${location}`,
       <View style={styles.infoContainer}>
         <Text style={styles.label}>Location</Text>
         <View style={{flexDirection:'row'}}>
-          {/* The location input is converted to be always uppercase */}
+          {/* Location input is automatically converted to uppercase */}
           <TextInput style={{...styles.input, width:"88%", marginRight:"2%"}} value={location} onChangeText={(text) => setLocation(text.toUpperCase())} autoCapitalize='characters'/>
           <Pressable style={{width:"10%", alignContent:'center', justifyContent:'center'}} onPress={() => setModalVisible(true)}>
             <FontAwesome name='plus-square' size={36} color={"#35B369"}/>
@@ -161,7 +160,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
-
     padding: 20,
   },
   infoContainer: {

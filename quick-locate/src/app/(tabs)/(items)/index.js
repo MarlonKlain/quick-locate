@@ -8,17 +8,16 @@ import { router } from "expo-router";
 export default function Items() {
     const [itemsList, setItemsList] = useState([]);
     const [search, setSearch] = useState("")
-    //set the filter to "description" as default
+    // Set "description" as the default filter
     const [column , setColumn] = useState('description');
     const [sorter, setSorter] = useState("")
     const [refresh, setRefresh] = useState(false);
     const [filterValue, setFilterValue] = useState(null);
     const [sorterValue, setSorterValue] = useState(null);
 
-
     let item = new Item();
     
-    //loading all the items from the database
+    // Load all items from the database
     async function loadDataFromDatabase() {
         try {
             item.getItemsListFromDatabase()
@@ -30,14 +29,14 @@ export default function Items() {
         }
     }
     
-    //this function will handle when the user rolldown the list to update
+    // Handle pull-to-refresh functionality
     const handleRefresh = async () => {
         setRefresh(true)
         loadDataFromDatabase()
         setRefresh(false)
     }
 
-    //this useEffect will handle when the user changes the filter to search
+    // Apply filters when search parameters change
     function handleFilters(search, column, sorter){
         if(search){
             item.filter(column, search, sorter)
@@ -71,18 +70,15 @@ export default function Items() {
                 </View>
             </View>
             <View style={styles.filters}>
-                {/* This component is a dropdown menu, each label is the text that apears to the user and value is the respective value */}
+                {/* Dropdown menu component */}
                 <DropdownComponent 
                     filters={[{ label: 'Código', value: 'code' }, { label: 'Partnumber', value: 'partnumber' }, { label: 'Descrição', value: 'description' }, { label: 'Localização', value: 'location' }]}
-                    // label is the default text the are shown before the user select something
+                    // Default text shown before selection
                     label={"Filtros"}
-                    //When selected a filter, it will pass the value to the column hook
+                    // Updates column state when a filter is selected
                     onSendValue={setColumn}
                     value={filterValue}
-                    // We pass the setSorterValue function from the parent component to the child.
-                    // This allows the child component to update the state that lives in the parent.
-                    // In this way, the parent "controls" the selected value, and the child acts as a controlled component.
-                    // The child uses the setValue={setSorterValue} prop to notify the parent of changes.
+                    // Callback to update parent component's state
                     setValue={setFilterValue}
                 />
 
@@ -93,7 +89,7 @@ export default function Items() {
                     value={sorterValue}
                     setValue={setSorterValue}
                 />
-                {/* This button will set the filters to default */}
+                {/* Reset all filters to default */}
                 <Pressable
                     onPress={() => {
                         loadDataFromDatabase();
@@ -124,16 +120,16 @@ export default function Items() {
                     onRefresh={handleRefresh}
                     data={itemsList}
                     renderItem={({ item }) => (
-                        // When longing pressing on an item, it will open a new screen with the item`s information
+                        // Long press navigates to item details
                         <Pressable onLongPress={() => router.push(`./${item.code}`)}>
                             <View style={styles.row}>
-                                {/* Green Square if location is free */}
+                                {/* Green square indicates free location */}
                                 {item.code ? (
                                     <Text style={styles.cell}>{item.code}</Text>
                                 ) : (
                                     <View style={styles.freeLocation} />
                                 )}
-                                {/* The ?? operator (null coalescing) evaluates to the right-hand side if and only if the left-hand side is either null or undefined. */}
+                                {/* Null coalescing operator (??) returns right-hand value if left is null/undefined */}
                                 <Text style={styles.cell}>{item.partnumber ?? ""}</Text>
                                 <Text style={styles.cell}>{item.description ?? ""}</Text>
                                 <Text style={styles.cell}>{item.location}</Text>
@@ -243,12 +239,11 @@ const styles = StyleSheet.create({
     }, 
     freeLocation: {
         flex:1,
-        width: 20,  // Adjust size as needed
-        height: 20, // Adjust size as needed
+        width: 20,  
+        height: 20,
         backgroundColor: "green",
-        alignSelf: "center", // Centers it within the row
-        borderRadius: 4, // Optional: makes it a rounded square
+        alignSelf: "center",
+        borderRadius: 4,
         marginLeft:5
     },
-    
 });
