@@ -41,36 +41,6 @@ QuickLocate offers a streamlined solution to manage the location of warehouse it
 
 ---
 
-## 📦 Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/your-username/QuickLocate.git
-```
-
-2. Navigate to the project directory:
-```bash
-cd QuickLocate
-```
-
-3. Install dependencies:
-```bash
-yarn install
-# or
-npm install
-```
-
-4. Start the app:
-```bash
-yarn start
-# or
-npm start
-```
-
-(Additional instructions for setting up the backend and connecting to the database would be added here.)
-
----
-
 ## 🤝 Contributing
 
 At the moment, QuickLocate is a solo project and not open for external contributions. However, suggestions, feedback, and ideas are more than welcome!
