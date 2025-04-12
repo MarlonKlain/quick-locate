@@ -31,7 +31,7 @@ export class Item {
                     },
                 });
                 const result = await response.json();
-                console.log(result);
+                // console.log(result);
                 
                 return result;
             } catch (error) {
@@ -58,7 +58,7 @@ export class Item {
                 body: JSON.stringify(data)
             });
             const result = await response.json();
-            console.log(result);
+            // console.log(result);
             return result;
         } catch (error) {
             console.log(error);
