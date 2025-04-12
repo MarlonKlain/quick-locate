@@ -196,7 +196,8 @@ server.get('/import', async (request, reply) => {
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const code = await request.query.code;
-    if(!code){
+    console.log("Código:", code);
+    if(code == undefined){
         try {
             // Retrieve all items in the database and all free locations
             const items = await sql`
