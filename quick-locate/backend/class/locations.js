@@ -41,7 +41,7 @@ export class Locations {
             }
         } else {
             try {
-                const response = await fetch(`https://quick-locate.onrender.com/locations/?location=${location}`, {
+                const response = await fetch(`https://quick-locate.onrender.com/locations/${location}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"

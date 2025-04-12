@@ -245,7 +245,7 @@ server.get('/locations', async (request, reply) => {
 //arrumar isso aqui v
 server.get('/locations/:location', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL)
-    const location = request.query.location;
+    const {location} = request.params;
     try {
         const itemsByLocation = await sql`
         SELECT * FROM item i
