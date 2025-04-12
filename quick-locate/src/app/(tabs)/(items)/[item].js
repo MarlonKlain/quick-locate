@@ -50,32 +50,33 @@ export default function itemDetails() {
     })
   }
 
-  // Prevents the user from changing to the previous location
   async function locationValidations(oldLocation, location){
+    // Preventing the user from changing to the previous location
     if(oldLocation != location){
-    locations.getLocations(location)
-    .then((response) => {
-      if(response.itemsByLocation.length === 0) {
-        Alert.alert(
-          `Deseja confirmar a atualização de endereço do item: ${description}?`,
-          `Endereço antigo: ${oldLocation}
-  Novo endereço: ${location}`, 
-          [
-            { text: "Cancelar", style: 'cancel'},
-            { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
-          ]);        
-      } else {
-        Alert.alert (
-          `Aviso!`,
-          `Já existe um item neste endereço, deseja prosseguir?`,
-          [
-            { text: "Cancelar", style: 'cancel'},
-            { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
-          ]
-        )
+      locations.getLocations(location)
+      .then((response) => {
+        // warning for the user when the location they want to update already contains an item.
+        if(response.itemsByLocation.length === 0) {
+          Alert.alert(
+            `Deseja confirmar a atualização de endereço do item: ${description}?`,
+            `Endereço antigo: ${oldLocation}
+    Novo endereço: ${location}`, 
+            [
+              { text: "Cancelar", style: 'cancel'},
+              { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
+            ]);        
+        } else {
+          Alert.alert (
+            `Aviso!`,
+            `Já existe um item neste endereço, deseja prosseguir?`,
+            [
+              { text: "Cancelar", style: 'cancel'},
+              { text: "CONFIRMAR", onPress: async () => await itemsInfo.modifyLocation(code, location), style: 'destructive'}
+            ]
+          )
 
-      }
-    })
+        }
+      })
     } else {
       Alert.alert("Insira uma localização diferente da antiga!")
     }

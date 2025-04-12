@@ -119,7 +119,7 @@ server.post('/login', async (request, reply) => {
 
         // Successful login if username exists and password is correct
         if (user && validation) { 
-            return reply.status(200).send({ message: "Login successful", user });
+            return reply.status(200).send({ message: "User found", user });
         } else {
             return reply.status(400).send({ error: "Username or password is incorrect" });
         }
