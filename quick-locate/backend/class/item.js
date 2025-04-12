@@ -4,27 +4,8 @@ export class Item {
     // If no parameter is passed, it will return all items from the database
     // If a code is passed as parameter, it will return information about that specific item
     async getItemsListFromDatabase(code = undefined) {
-        if(!code) {
             try {
-                // Making the request
-                const response = await fetch("https://quick-locate.onrender.com/items", {
-                    // Setting the method type
-                    method: "GET",
-                    // Extra information sent with the request
-                    headers: {
-                        // The data type of the sent/retrieved data
-                        "Content-Type": "application/json",
-                   },
-                });
-                // Converts the server's response from text format to JavaScript objects
-                const result = await response.json();
-                return result;
-            } catch (error) {
-                console.error("Error:", error);
-            }
-        } else {
-            try {
-                const response = await fetch(`https://quick-locate.onrender.com/items/?code=${code}`, {
+                const response = await fetch(`https://quick-locate.onrender.com/items?code=${code}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json"
@@ -37,7 +18,6 @@ export class Item {
             } catch (error) {
                 console.error("Error:", error);
             }
-        }
     }
 
     // This method updates the item location based on user selection

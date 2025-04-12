@@ -195,38 +195,57 @@ server.get('/import', async (request, reply) => {
 // This request will retrieve all items and their respective information
 server.get('/items', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
-    try {
-        // Retrieve all items in the database and all free locations
-        const items = await sql`
-        SELECT * FROM item i
-        RIGHT JOIN item_location il
-        ON i.location = il.location;
-        `
-        return reply.status(200).send({messsage: "All products returned", items})
-    } catch (error) {
-        return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+    const code = await request.query.code;
+    if(!code){
+        try {
+            // Retrieve all items in the database and all free locations
+            const items = await sql`
+            SELECT * FROM item i
+            RIGHT JOIN item_location il
+            ON i.location = il.location;
+            `
+            return reply.status(200).send({messsage: "All products returned", items})
+        } catch (error) {
+            return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+        }
+    } else {
+        try {
+            const items = await sql`
+            SELECT * FROM item 
+            WHERE code = ${code}
+            `
+            const itemLocationHistory = await sql`
+            SELECT location, moved_at
+            FROM item_location_history
+            WHERE item_code = ${code}
+            ORDER BY moved_at
+            `
+            return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
+        } catch (error) {
+            return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+        }
     }
 })
 // arrumar isso aqui v
-server.get('/items/:code', async (request, reply) => {
-    const sql = neon(process.env.DATABASE_URL);
-    const code = request.query.code;
-    try {
-        const items = await sql`
-        SELECT * FROM item 
-        WHERE code = ${code}
-        `
-        const itemLocationHistory = await sql`
-        SELECT location, moved_at
-        FROM item_location_history
-        WHERE item_code = ${code}
-        ORDER BY moved_at
-        `
-        return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
-    } catch (error) {
-        return reply.status(400).send({ message: "Failed to get the items", error: error.message});
-    }
-})
+// server.get('/items/:code', async (request, reply) => {
+//     const sql = neon(process.env.DATABASE_URL);
+//     const code = request.query.code;
+//     try {
+//         const items = await sql`
+//         SELECT * FROM item 
+//         WHERE code = ${code}
+//         `
+//         const itemLocationHistory = await sql`
+//         SELECT location, moved_at
+//         FROM item_location_history
+//         WHERE item_code = ${code}
+//         ORDER BY moved_at
+//         `
+//         return reply.status(200).send({messsage: "All products returned", items, itemLocationHistory})
+//     } catch (error) {
+//         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
+//     }
+// })
 
 // This request will retrieve all locations and return only the first letter of each one without duplicates
 server.get('/locations', async (request, reply) => {
