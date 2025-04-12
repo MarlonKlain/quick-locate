@@ -21,8 +21,16 @@ This is also my first full-stack project. I developed it to showcase my skills a
 ## 📷 Screenshots
 <table>
   <tr>
-    <td><img src="quick-located/assets/screenshots/login.jpg" alt="Login Screen" width="200"/></td>
-    <td><img src="quick-located/assets/screenshots/register.jpg" alt="Register" width="200"/></td>
+    <td><img src="quick-locate/assets/screenshots/login.jpg" alt="Login Screen" width="200"/></td>
+    <td><img src="quick-locate/assets/screenshots/register.jpg" alt="Register" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="quick-locate/assets/screenshots/Home.jpg" alt="Register" width="200"/></td>
+    <td><img src="quick-locate/assets/screenshots/ItemInformation.jpg" alt="Register" width="200"/></td>
+  </tr>
+  <tr>
+    <td><img src="quick-locate/assets/screenshots/Location.jpg" alt="Register" width="200"/></td>
+    <td><img src="quick-locate/assets/screenshots/ItemsByLocation.jpg" alt="Register" width="200"/></td>
   </tr>
 </table>
 ---
