@@ -212,7 +212,7 @@ server.get('/items', async (request, reply) => {
         return reply.status(400).send({ message: "Failed to get the items", error: error.message});
     }
 })
-// arrumar isso aqui v
+// This will retrive all the information about a specif item
 server.get('/items/:code', async (request, reply) => {
     const sql = neon(process.env.DATABASE_URL);
     const {code} = request.params;
