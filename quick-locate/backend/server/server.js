@@ -28,11 +28,16 @@ server.register(cors, {
 // Callback function (what to do when server starts)
 // server.listen(configuration, callback)
 
-server.listen({ host: '0.0.0.0', port: process.env.PORT ?? 3000 }, () => {
-    // host: '0.0.0.0'
-    // Makes the server available on all network interfaces
-    console.log(`Server running!`);
-});
+try {
+    server.listen({ host: '0.0.0.0', port: process.env.PORT ?? 3000 }, () => {
+        // host: '0.0.0.0'
+        // Makes the server available on all network interfaces
+        console.log(`Server running!`);
+    });    
+} catch (error) {
+    console.log(error);
+    
+}
 
 // This request will attempt to register the user
 server.post('/register', async (request, reply) => {
